@@ -6,10 +6,10 @@
   "scripts": {
     "build": "tsc",
     "build:prod": "tsc --project tsconfig.prod.json",
-    "start": "node dist/cli/flcm-cli.js",
+    "start": "node dist/cli/flcm-cli-simple.js",
     "start:api": "node dist/api/flcm-api.js",
-    "start:prod": "NODE_ENV=production node dist/cli/flcm-cli.js",
-    "dev": "ts-node flcm-core/cli/flcm-cli.ts",
+    "start:prod": "NODE_ENV=production node dist/cli/flcm-cli-simple.js",
+    "dev": "ts-node flcm-core/cli/flcm-cli-simple.ts",
     "dev:api": "ts-node flcm-core/api/flcm-api.ts",
     "test": "echo 'Tests will be added for full implementation' && exit 0",
     "test:demos": "echo 'Demo tests not available in minimal build' && exit 0",
@@ -28,7 +28,7 @@
     "health": "curl http://localhost:3000/health"
   },
   "bin": {
-    "flcm": "./dist/cli/flcm-cli.js"
+    "flcm": "./dist/cli/flcm-cli-simple.js"
   },
   "keywords": [
     "content-creation",
