@@ -1,32 +1,14 @@
 {
   "name": "FLCM-Method",
   "version": "1.0.0",
-  "description": "Friction Lab Content Maker - AI-powered multi-platform content creation system",
+  "description": "Friction Lab Content Maker - AI-powered content creation",
   "permissions": {
     "allow": [
       "Bash(npm:*)",
       "Bash(node:*)",
-      "Bash(tsc:*)",
       "Read(flcm-core/**)",
       "Write(flcm-core/**)",
-      "Edit(flcm-core/**)",
-      "Read(docs/**)",
-      "Write(docs/**)",
-      "Read(scripts/**)",
-      "Write(scripts/**)",
-      "Read(dist/**)",
-      "Bash(npm run build)",
-      "Bash(npm test)",
-      "Bash(git:*)"
-    ],
-    "deny": [],
-    "ask": []
-  },
-  "projectType": "content-creation-tool",
-  "mainLanguage": "typescript",
-  "features": {
-    "agents": ["collector", "scholar", "creator", "adapter"],
-    "platforms": ["linkedin", "twitter", "wechat", "xiaohongshu"],
-    "modes": ["quick", "standard"]
+      "Edit(flcm-core/**)"
+    ]
   }
 }

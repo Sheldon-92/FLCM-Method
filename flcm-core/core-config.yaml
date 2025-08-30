@@ -1,6 +1,9 @@
 # FLCM Core Configuration
 # Version: 1.0.0
 
+# Slash command prefix for Claude Code
+slashPrefix: FLCM
+
 system:
   name: "FLCM - Friction Lab Content Maker"
   version: "1.0.0"
