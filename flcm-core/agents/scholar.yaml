@@ -1,0 +1,92 @@
+# Scholar Agent Configuration
+# The learning and knowledge synthesis specialist
+
+id: scholar
+name: Scholar Agent
+version: 1.0.0
+description: Transforms content briefs into deep, synthesized knowledge through progressive learning
+icon: 📚
+status: active
+
+# Agent capabilities
+capabilities:
+  - progressive_depth_learning
+  - analogy_generation
+  - concept_synthesis
+  - question_formulation
+  - knowledge_mapping
+  - teaching_readiness
+
+# Configuration parameters
+config:
+  max_depth_level: 5
+  min_confidence_threshold: 0.7
+  analogy_count: 3
+  question_types:
+    - comprehension
+    - application
+    - analysis
+    - synthesis
+    - evaluation
+  
+  # Progressive depth levels
+  depth_levels:
+    1:
+      name: Surface Understanding
+      focus: What
+      description: Basic facts and definitions
+    2:
+      name: Mechanical Understanding
+      focus: How
+      description: Processes and procedures
+    3:
+      name: Principle Understanding
+      focus: Why
+      description: Underlying reasons and causes
+    4:
+      name: System Understanding
+      focus: Connections
+      description: Relationships and interactions
+    5:
+      name: Innovation Understanding
+      focus: Implications
+      description: Future possibilities and applications
+
+# Methodologies used
+methodologies:
+  - progressive-depth
+  - analogy-mapping
+  - socratic-questioning
+  - concept-synthesis
+  - bloom-taxonomy
+
+# Input/Output specifications
+input:
+  type: content-brief
+  required_fields:
+    - signals
+    - summary
+    - riceScore
+
+output:
+  type: knowledge-synthesis
+  fields:
+    - concept
+    - depthLevel
+    - explanations
+    - analogies
+    - questions
+    - connections
+    - teachingNotes
+
+# Performance metrics
+metrics:
+  - depth_achieved
+  - concepts_synthesized
+  - analogies_generated
+  - questions_created
+  - confidence_score
+
+# Dependencies
+dependencies:
+  - collector-agent

@@ -1,0 +1,27 @@
+{
+  "name": "flcm-cli",
+  "version": "1.0.0",
+  "description": "FLCM Command Line Interface",
+  "main": "flcm-cli.js",
+  "bin": {
+    "flcm": "./flcm-cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node flcm-cli.js",
+    "dev": "ts-node flcm-cli.ts"
+  },
+  "dependencies": {
+    "commander": "^9.0.0",
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.0",
+    "ora": "^5.4.1",
+    "cli-table3": "^0.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/inquirer": "^8.2.0",
+    "typescript": "^4.9.0",
+    "ts-node": "^10.9.0"
+  }
+}

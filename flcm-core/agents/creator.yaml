@@ -1,0 +1,110 @@
+# Creator Agent Configuration
+# The content creation and voice preservation specialist
+
+id: creator
+name: Creator Agent
+version: 1.0.0
+description: Transforms knowledge synthesis into engaging content while preserving unique voice
+icon: ✍️
+status: active
+
+# Agent capabilities
+capabilities:
+  - voice_dna_analysis
+  - content_structuring
+  - narrative_building
+  - hook_creation
+  - iterative_refinement
+  - engagement_optimization
+
+# Configuration parameters
+config:
+  max_iterations: 3
+  min_quality_score: 0.75
+  voice_preservation_weight: 0.4
+  
+  # SPARK Framework elements
+  spark_framework:
+    structure:
+      - hook
+      - context
+      - main_points
+      - examples
+      - conclusion
+      - call_to_action
+    
+    purpose_types:
+      - inform
+      - persuade
+      - entertain
+      - inspire
+      - educate
+    
+    audience_factors:
+      - knowledge_level
+      - interests
+      - pain_points
+      - goals
+      - reading_style
+  
+  # Voice DNA components
+  voice_dna:
+    linguistic_features:
+      - sentence_length
+      - vocabulary_complexity
+      - punctuation_style
+      - paragraph_structure
+    
+    tone_attributes:
+      - formality_level
+      - emotional_tone
+      - authority_level
+      - humor_usage
+    
+    stylistic_elements:
+      - metaphor_frequency
+      - question_usage
+      - personal_pronouns
+      - active_vs_passive
+
+# Methodologies used
+methodologies:
+  - spark-framework
+  - voice-dna-analysis
+  - hook-ladder
+  - storytelling-arc
+  - engagement-metrics
+
+# Input/Output specifications
+input:
+  type: knowledge-synthesis
+  required_fields:
+    - concept
+    - depthAnalysis
+    - analogies
+    - questions
+    - teachingNotes
+
+output:
+  type: content-draft
+  fields:
+    - title
+    - hook
+    - content
+    - structure
+    - voiceProfile
+    - revisions
+    - engagementScore
+    - metadata
+
+# Performance metrics
+metrics:
+  - voice_consistency
+  - engagement_score
+  - readability_score
+  - hook_effectiveness
+  - revision_count
+
+# Dependencies
+dependencies:
+  - scholar-agent

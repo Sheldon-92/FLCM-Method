@@ -1,0 +1,57 @@
+# FLCM Installation Manifest
+# Tracks version and installation details
+
+installation:
+  version: "1.0.0"
+  date: "2024-12-28"
+  environment: "claude-code"
+  
+components:
+  core:
+    version: "1.0.0"
+    status: "installed"
+    
+  agents:
+    collector:
+      version: "1.0.0"
+      status: "pending"
+    scholar:
+      version: "1.0.0"
+      status: "pending"
+    creator:
+      version: "1.0.0"
+      status: "pending"
+    adapter:
+      version: "1.0.0"
+      status: "pending"
+      
+  methodologies:
+    installed: []
+    available:
+      - rice-framework
+      - signal-extraction
+      - progressive-depth
+      - analogy-mapping
+      - spark-method
+      - voice-dna
+      
+  workflows:
+    quick_mode:
+      version: "1.0.0"
+      status: "pending"
+    standard_mode:
+      version: "1.0.0"
+      status: "pending"
+
+dependencies:
+  claude_code:
+    required: true
+    min_version: "1.0.0"
+  obsidian:
+    required: false
+    min_version: "1.0.0"
+    
+verification:
+  checksum: ""
+  last_check: ""
+  integrity: "pending"

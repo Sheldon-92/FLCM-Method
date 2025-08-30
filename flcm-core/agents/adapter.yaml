@@ -1,0 +1,131 @@
+# Adapter Agent Configuration
+# The platform optimization and content adaptation specialist
+
+id: adapter
+name: Adapter Agent
+version: 1.0.0
+description: Optimizes content for specific platforms while maintaining message integrity
+icon: 🎯
+status: active
+
+# Agent capabilities
+capabilities:
+  - platform_optimization
+  - format_adaptation
+  - hashtag_generation
+  - emoji_placement
+  - character_limit_optimization
+  - engagement_element_insertion
+  - cross_platform_consistency
+
+# Configuration parameters
+config:
+  platforms:
+    linkedin:
+      max_chars: 3000
+      ideal_length: 1200
+      hashtag_limit: 5
+      emoji_usage: moderate
+      formatting:
+        - bold_headers
+        - bullet_points
+        - numbered_lists
+      engagement_elements:
+        - professional_hook
+        - industry_statistics
+        - thought_leadership
+        - call_to_action
+    
+    wechat:
+      max_chars: 2000
+      ideal_length: 800
+      emoji_usage: high
+      formatting:
+        - short_paragraphs
+        - visual_breaks
+        - mini_program_links
+      engagement_elements:
+        - emotional_hook
+        - social_proof
+        - shareable_quotes
+    
+    twitter:
+      max_chars: 280
+      thread_max: 25
+      hashtag_limit: 2
+      emoji_usage: moderate
+      formatting:
+        - thread_structure
+        - hook_tweet
+        - visual_tweet
+      engagement_elements:
+        - viral_hook
+        - retweet_worthy
+        - reply_invitation
+    
+    xiaohongshu:
+      max_chars: 1000
+      title_max: 20
+      hashtag_limit: 10
+      emoji_usage: very_high
+      formatting:
+        - eye_catching_title
+        - emoji_sections
+        - lifestyle_focus
+      engagement_elements:
+        - lifestyle_hook
+        - visual_description
+        - personal_story
+        - trending_topics
+
+  optimization_strategies:
+    - content_trimming
+    - message_restructuring
+    - platform_voice_adjustment
+    - visual_element_suggestions
+    - engagement_optimization
+    - algorithm_friendly_formatting
+
+# Methodologies used
+methodologies:
+  - platform-optimizer
+  - hashtag-generator
+  - engagement-booster
+  - format-adapter
+
+# Input/Output specifications
+input:
+  type: content-draft
+  required_fields:
+    - title
+    - hook
+    - content
+    - structure
+    - voiceProfile
+    - keyMessage
+
+output:
+  type: adapted-content
+  fields:
+    - platform
+    - optimizedTitle
+    - optimizedContent
+    - hashtags
+    - formatting
+    - characterCount
+    - engagementElements
+    - visualSuggestions
+    - postingStrategy
+    - metadata
+
+# Performance metrics
+metrics:
+  - platform_fit_score
+  - engagement_prediction
+  - message_preservation
+  - format_compliance
+  - optimization_time
+
+# Dependencies
+dependencies:
+  - creator-agent

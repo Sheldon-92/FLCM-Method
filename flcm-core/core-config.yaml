@@ -1,0 +1,97 @@
+# FLCM Core Configuration
+# Version: 1.0.0
+
+system:
+  name: "FLCM - Friction Lab Content Maker"
+  version: "1.0.0"
+  mode: "development" # development | production
+  
+agents:
+  collector:
+    enabled: true
+    timeout: 300 # seconds
+    methodologies:
+      - rice-framework
+      - signal-extraction
+  
+  scholar:
+    enabled: true
+    timeout: 300
+    methodologies:
+      - progressive-depth
+      - analogy-mapping
+  
+  creator:
+    enabled: true
+    timeout: 300
+    methodologies:
+      - spark-method
+      - voice-dna
+  
+  adapter:
+    enabled: true
+    timeout: 300
+    platforms:
+      - linkedin
+      - twitter
+      - medium
+      - substack
+
+workflows:
+  quick_mode:
+    enabled: true
+    max_duration: 1800 # 30 minutes
+    agents:
+      - collector
+      - creator
+    skip_learning: true
+    
+  standard_mode:
+    enabled: true
+    max_duration: 3600 # 60 minutes
+    agents:
+      - collector
+      - scholar
+      - creator
+      - adapter
+    full_pipeline: true
+
+document_pipeline:
+  format: "markdown"
+  frontmatter: true
+  obsidian_compatible: true
+  auto_save: true
+  
+methodologies:
+  transparency: true
+  logging: true
+  user_visibility: "full" # full | summary | minimal
+
+user_preferences:
+  default_mode: "quick"
+  voice_profile: "default"
+  platforms:
+    primary: "linkedin"
+    secondary: ["twitter", "medium"]
+  
+  obsidian:
+    enabled: false
+    vault_path: ""
+    auto_file: false
+    
+validation:
+  auto_validate: true
+  strict_mode: false
+  quality_threshold: 0.7
+
+paths:
+  templates: ".flcm-core/templates"
+  methodologies: ".flcm-core/methodologies"
+  tasks: ".flcm-core/tasks"
+  output: "output"
+  logs: "logs"
+
+debug:
+  enabled: true
+  verbose: false
+  log_level: "info" # debug | info | warning | error

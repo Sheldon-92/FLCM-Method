@@ -1,0 +1,167 @@
+# Workflow Engine Configuration
+# Orchestrates the complete FLCM pipeline
+
+id: workflow-engine
+name: FLCM Workflow Engine
+version: 1.0.0
+description: Orchestrates agent pipeline for content creation
+status: active
+
+# Workflow modes
+modes:
+  quick:
+    name: Quick Mode
+    duration: 20-30 minutes
+    description: Fast content generation with essential processing
+    pipeline:
+      - agent: collector
+        config:
+          max_sources: 3
+          depth: basic
+          timeout: 300
+      - agent: scholar
+        config:
+          max_depth: 3
+          analogies: 2
+          skip_level_5: true
+      - agent: creator
+        config:
+          iterations: 1
+          voice_analysis: basic
+          hook_variations: 1
+      - agent: adapter
+        config:
+          platforms: [linkedin, twitter]
+          hashtags: auto
+          visuals: skip
+    
+  standard:
+    name: Standard Mode
+    duration: 45-60 minutes
+    description: Comprehensive content creation with full optimization
+    pipeline:
+      - agent: collector
+        config:
+          max_sources: 5
+          depth: comprehensive
+          timeout: 600
+      - agent: scholar
+        config:
+          max_depth: 5
+          analogies: 5
+          teaching_notes: true
+      - agent: creator
+        config:
+          iterations: 3
+          voice_analysis: comprehensive
+          hook_variations: 3
+      - agent: adapter
+        config:
+          platforms: [linkedin, twitter, wechat, xiaohongshu]
+          hashtags: optimized
+          visuals: suggested
+  
+  custom:
+    name: Custom Mode
+    duration: variable
+    description: User-defined pipeline configuration
+    pipeline: []
+
+# State management
+state:
+  storage: memory
+  persistence: optional
+  checkpoints:
+    - after_collector
+    - after_scholar
+    - after_creator
+    - after_adapter
+  
+# Progress tracking
+progress:
+  reporting:
+    frequency: after_each_agent
+    detail_level: summary
+  metrics:
+    - processing_time
+    - quality_scores
+    - token_usage
+    - error_count
+
+# Error handling
+error_handling:
+  retry_strategy:
+    max_retries: 3
+    backoff: exponential
+    initial_delay: 1000
+  
+  fallback_options:
+    collector_failure: use_cached_content
+    scholar_failure: skip_depth_analysis
+    creator_failure: use_template
+    adapter_failure: use_default_format
+  
+  recovery_points:
+    - pre_collector
+    - post_collector
+    - post_scholar
+    - post_creator
+
+# Pipeline configuration
+pipeline:
+  parallel_processing: false
+  agent_timeout: 600
+  total_timeout: 3600
+  
+  data_flow:
+    collector_to_scholar:
+      - content_brief
+      - signals
+      - metadata
+    
+    scholar_to_creator:
+      - knowledge_synthesis
+      - analogies
+      - teaching_notes
+    
+    creator_to_adapter:
+      - content_draft
+      - voice_profile
+      - spark_elements
+
+# Quality gates
+quality_gates:
+  collector:
+    min_rice_score: 40
+    min_signals: 3
+  
+  scholar:
+    min_depth: 2
+    min_confidence: 0.6
+  
+  creator:
+    min_engagement_score: 60
+    min_voice_consistency: 0.7
+  
+  adapter:
+    min_platform_fit: 70
+    min_message_preservation: 80
+
+# Monitoring
+monitoring:
+  metrics:
+    - agent_latency
+    - pipeline_duration
+    - success_rate
+    - quality_scores
+  
+  logging:
+    level: info
+    destinations:
+      - console
+      - file
+  
+  alerts:
+    - pipeline_timeout
+    - quality_gate_failure
+    - repeated_errors

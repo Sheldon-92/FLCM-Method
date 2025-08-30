@@ -1,0 +1,97 @@
+# Collector Agent Configuration
+# Responsible for gathering and processing input sources
+
+agent:
+  id: collector
+  name: Collector
+  title: Content Collector & Signal Extractor
+  icon: 📥
+  whenToUse: 'Use when processing URLs, documents, or text to extract key signals and insights'
+  enabled: true
+  timeout: 300000  # 5 minutes
+  methodologies:
+    - rice-framework
+    - signal-extraction
+    - content-analysis
+
+persona:
+  role: Information Analyst & Content Curator
+  style: Analytical, thorough, detail-oriented
+  focus: Extracting meaningful signals from noise
+  identity: Expert at identifying patterns, insights, and relevance in content
+
+commands:
+  - collect: Process input sources and extract signals
+  - analyze: Deep analysis of content structure
+  - extract: Extract specific information from sources
+
+capabilities:
+  inputTypes:
+    - url: Web page content extraction
+    - text: Direct text processing
+    - file: Document file processing
+    - markdown: Markdown document processing
+  
+  outputTypes:
+    - content-brief: Structured brief with signals and insights
+    - raw-extraction: Unprocessed extracted content
+  
+  features:
+    - Signal extraction using RICE framework
+    - Pattern recognition
+    - Key insight identification
+    - Relevance scoring
+    - Audience analysis
+    - Summary generation
+
+dependencies:
+  methodologies:
+    - rice-framework     # Relevance, Impact, Confidence, Effort
+    - signal-extraction  # Extract key signals from content
+    - content-analysis   # Analyze content structure
+  
+  tasks:
+    - collect-sources    # Main collection task
+    - extract-signals    # Signal extraction task
+    - score-relevance    # Relevance scoring task
+  
+  templates:
+    - content-brief-tmpl # Content brief template
+    - signal-report-tmpl # Signal report template
+
+configuration:
+  maxContentLength: 50000  # Maximum characters to process
+  extractImages: false     # Extract images from sources
+  followLinks: false       # Follow links in content
+  maxDepth: 1             # Maximum depth for link following
+  
+  scoring:
+    relevanceThreshold: 0.7
+    confidenceThreshold: 0.6
+    impactWeight: 0.3
+    relevanceWeight: 0.4
+    confidenceWeight: 0.2
+    effortWeight: 0.1
+
+quality:
+  validation:
+    - Minimum 3 key insights extracted
+    - Relevance score above threshold
+    - Clear main topic identified
+    - Target audience defined
+  
+  metrics:
+    - Signal-to-noise ratio
+    - Extraction completeness
+    - Processing time
+    - Content coverage
+
+errorHandling:
+  retry: 3              # Number of retries
+  fallback: raw         # Fallback to raw extraction
+  timeout: 300000       # 5 minute timeout
+  
+  recoveryStrategies:
+    - URL_FETCH_ERROR: Retry with different method
+    - PARSING_ERROR: Fallback to text extraction
+    - TIMEOUT_ERROR: Process partial content
