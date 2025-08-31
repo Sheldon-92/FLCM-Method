@@ -48,21 +48,30 @@ graph LR
 
 ## 📦 Installation
 
-### Option 1: One-Line Install (Recommended)
+### Option 1: Automated Install (Recommended for curl | bash)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Sheldon-92/FLCM-Method/main/install.sh | bash
+# Fully automated installation - no user input required
+curl -fsSL https://raw.githubusercontent.com/Sheldon-92/FLCM-Method/main/auto-install.sh | bash
 ```
 
-### Option 2: Manual Install
+### Option 2: Interactive Install (Choose installation path)
+```bash
+# Download and run interactively to choose custom path
+curl -fsSL https://raw.githubusercontent.com/Sheldon-92/FLCM-Method/main/install.sh > install.sh
+chmod +x install.sh
+./install.sh
+```
+
+### Option 3: Manual Install
 ```bash
 git clone https://github.com/Sheldon-92/FLCM-Method.git
-cd flcm
+cd FLCM-Method
 npm install
 npm run build
 npm link  # For global CLI access
 ```
 
-### Option 3: NPX (No Installation)
+### Option 4: NPX (No Installation)
 ```bash
 npx flcm@latest create
 ```
