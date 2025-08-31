@@ -290,7 +290,7 @@ export class PlatformOptimizer {
 
     if (config.engagementElements.includes('call_to_action')) {
       if (!result.includes('What') && !result.includes('How') && !result.includes('Share')) {
-        result += '\n\n💬 What's your experience with this? Share your thoughts below!';
+        result += '\n\n💬 What\'s your experience with this? Share your thoughts below!';
         modified = true;
         elements.push('call_to_action');
       }

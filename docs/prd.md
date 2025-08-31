@@ -420,7 +420,7 @@ Examples:
 
 ### **Track A: Core Infrastructure & Methodologies**
 
-**Epic 1: Technical Foundation & FLCM Architecture** - Set up FLCM repository structure, establish Claude Code command system, create base agent framework, implement document pipeline architecture, set up configuration management system
+**Epic 1: Technical Foundation & BMAD Architecture** - Set up FLCM repository structure mirroring BMAD, establish Claude Code command system, create base agent framework, implement document pipeline architecture, set up configuration management system
 
 **Epic 2: Methodology Development & Thinking Tools** - Develop core methodologies library (RICE, SPARK, Feynman, etc.), create methodology engine for pluggable frameworks, implement methodology transparency system, build thinking tool validators
 

@@ -1,15 +1,15 @@
-# **Epic 1: Technical Foundation & FLCM Architecture**
+# **Epic 1: Technical Foundation & BMAD Architecture**
 
-**Epic Goal**: Establish the complete FLCM infrastructure with a solid foundation for all agents and workflows while delivering a working prototype of basic content collection.
+**Epic Goal**: Establish the complete FLCM infrastructure following BMAD's proven patterns, creating a solid foundation for all agents and workflows while delivering a working prototype of basic content collection.
 
 ## **Story 1.1: Repository Structure Setup**
 **As a** developer,  
-**I want** to create the FLCM directory structure with clear organization,  
+**I want** to create the FLCM directory structure based on BMAD patterns,  
 **so that** the project has a clear, maintainable organization.
 
 **Acceptance Criteria:**
 1: `.flcm-core/` directory created with all required subdirectories
-2: Directory structure optimized for content creation workflow
+2: Directory structure mirrors BMAD with content-specific adaptations
 3: README files in each directory explaining purpose
 4: `.gitignore` configured for FLCM-specific files
 5: Directory permissions set correctly for Claude Code access

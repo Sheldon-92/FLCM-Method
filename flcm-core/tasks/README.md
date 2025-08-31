@@ -11,7 +11,7 @@ This directory contains executable task definitions in Markdown format that agen
 
 ## Task Format
 
-Tasks follow executable markdown format:
+Tasks follow BMAD executable markdown format:
 - Clear input/output specifications
 - Step-by-step instructions
 - Methodology references

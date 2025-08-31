@@ -71,44 +71,30 @@ check_requirements() {
 }
 
 prompt_install_location() {
-    # Check if running in non-interactive mode (e.g., piped from curl)
-    if [ ! -t 0 ]; then
-        echo -e "${BLUE}📁 Non-interactive mode detected${NC}"
-        echo -e "${YELLOW}Installing to default location: ${HOME}/.flcm${NC}"
-        INSTALL_DIR="${HOME}/.flcm"
-    else
-        echo -e "${BLUE}📁 Where would you like to install FLCM?${NC}"
-        echo -e "${YELLOW}Suggested paths:${NC}"
-        echo "  1. ${HOME}/.flcm (default - recommended)"
-        echo "  2. ${HOME}/flcm"
-        echo "  3. Custom path"
-        echo ""
-        
-        # Set timeout for read command
-        if read -t 10 -p "Choose option (1-3) or press Enter for default: " choice; then
-            case $choice in
-                2)
-                    INSTALL_DIR="${HOME}/flcm"
-                    ;;
-                3)
-                    read -p "Enter custom path: " user_path
-                    if [ ! -z "$user_path" ]; then
-                        # Expand ~ to home directory
-                        INSTALL_DIR="${user_path/#\~/$HOME}"
-                    fi
-                    ;;
-                *)
-                    # Default option (1 or empty)
-                    INSTALL_DIR="${HOME}/.flcm"
-                    ;;
-            esac
-        else
-            # Timeout reached, use default
-            echo ""
-            echo -e "${YELLOW}No input received, using default location${NC}"
+    echo -e "${BLUE}📁 Where would you like to install FLCM?${NC}"
+    echo -e "${YELLOW}Suggested paths:${NC}"
+    echo "  1. ${HOME}/.flcm (default - recommended)"
+    echo "  2. ${HOME}/flcm"
+    echo "  3. Custom path"
+    echo ""
+    read -p "Choose option (1-3) or press Enter for default: " choice
+    
+    case $choice in
+        2)
+            INSTALL_DIR="${HOME}/flcm"
+            ;;
+        3)
+            read -p "Enter custom path: " user_path
+            if [ ! -z "$user_path" ]; then
+                # Expand ~ to home directory
+                INSTALL_DIR="${user_path/#\~/$HOME}"
+            fi
+            ;;
+        *)
+            # Default option (1 or empty)
             INSTALL_DIR="${HOME}/.flcm"
-        fi
-    fi
+            ;;
+    esac
     
     # Validate path is writable
     test_dir=$(dirname "$INSTALL_DIR")
@@ -255,13 +241,7 @@ run_quick_test() {
     fi
     
     # Test demos (optional)
-    # Check if running in non-interactive mode
-    if [ ! -t 0 ]; then
-        echo -e "${YELLOW}Skipping demo tests (non-interactive mode)${NC}"
-        run_demos="n"
-    else
-        read -t 10 -p "Run demo tests? This will take a few minutes (y/N): " run_demos || run_demos="n"
-    fi
+    read -p "Run demo tests? This will take a few minutes (y/N): " run_demos
     if [[ $run_demos =~ ^[Yy]$ ]]; then
         echo "Running demos..."
         npm run demo:all || echo -e "${YELLOW}⚠️  Some demos failed, but core system should work${NC}"

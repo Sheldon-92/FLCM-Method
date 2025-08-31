@@ -593,7 +593,7 @@ export class DocumentTransformer {
   private generateCallToAction(platform: string): string {
     const ctas: Record<string, string> = {
       twitter: 'Share your thoughts below 👇',
-      linkedin: 'What's your experience with this? Let's discuss in the comments.',
+      linkedin: 'What\'s your experience with this? Let\'s discuss in the comments.',
       wechat: '欢迎在评论区分享您的想法',
       xiaohongshu: '姐妹们，你们怎么看？评论区见 💬',
       medium: 'If you found this helpful, please clap and share.',
