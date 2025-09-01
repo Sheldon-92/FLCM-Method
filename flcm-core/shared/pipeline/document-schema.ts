@@ -331,8 +331,9 @@ export class DocumentValidator {
 // Source type enumeration
 export enum SourceType {
   URL = 'url',
-  FILE = 'file',
+  FILE = 'file',  
   TEXT = 'text',
+  MARKDOWN = 'markdown',
   API = 'api'
 }
 
@@ -367,6 +368,7 @@ export function createInsightsDocument(
 export interface DialogueSession {
   id: string;
   title: string;
+  interactive?: boolean;
   userId?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -386,6 +388,7 @@ export interface DialogueMessage {
 export interface Feedback {
   satisfied: boolean;
   suggestions: string[];
+  score?: number;
   rating?: number;
   comments?: string;
 }

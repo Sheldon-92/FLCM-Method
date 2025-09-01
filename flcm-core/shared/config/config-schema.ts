@@ -12,19 +12,24 @@ export interface BaseConfig {
 
 // Creation modes
 export enum CreationMode {
+  QUICK = 'quick',
+  STANDARD = 'standard',
+  CUSTOM = 'custom',
   DRAFT = 'draft',
   POLISH = 'polish',
   INTERACTIVE = 'interactive',
   BATCH = 'batch'
 }
 
-// Platform types
+// Platform types  
 export enum Platform {
   LINKEDIN = 'linkedin',
   TWITTER = 'twitter',
   XIAOHONGSHU = 'xiaohongshu',
   ZHIHU = 'zhihu',
-  WECHAT = 'wechat'
+  WECHAT = 'wechat',
+  FACEBOOK = 'facebook',
+  INSTAGRAM = 'instagram'
 }
 
 // Agent-specific configuration
