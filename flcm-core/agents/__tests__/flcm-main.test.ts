@@ -101,21 +101,11 @@ describe('FLCMAgent', () => {
       return '';
     });
     
-    mockFs.mkdirSync.mockImplementation(() => {});
+    mockFs.mkdirSync.mockImplementation(() => undefined);
     mockFs.writeFileSync.mockImplementation(() => {});
     
     flcmAgent = new FLCMAgent();
-    mockAgent = new MockAgent({
-      id: 'scholar',
-      name: 'Test Scholar',
-      title: 'Test Scholar Agent',
-      icon: '🔍',
-      whenToUse: 'testing',
-      enabled: true,
-      priority: 1,
-      timeout: 5000,
-      retryAttempts: 3
-    });
+    mockAgent = new MockAgent('scholar.yaml');
   });
 
   describe('Initialization', () => {
@@ -158,8 +148,8 @@ describe('FLCMAgent', () => {
     test('should track multiple registered agents', async () => {
       await flcmAgent.init();
       
-      const agent1 = new MockAgent({ id: 'scholar', name: 'Scholar', title: 'Scholar', icon: '🔍', whenToUse: 'analysis', enabled: true, priority: 1, timeout: 5000, retryAttempts: 3 });
-      const agent2 = new MockAgent({ id: 'creator', name: 'Creator', title: 'Creator', icon: '✍️', whenToUse: 'content', enabled: true, priority: 2, timeout: 10000, retryAttempts: 3 });
+      const agent1 = new MockAgent('scholar.yaml');
+      const agent2 = new MockAgent('creator.yaml');
       
       flcmAgent.registerAgent(agent1);
       flcmAgent.registerAgent(agent2);
@@ -227,17 +217,7 @@ describe('FLCMAgent', () => {
     beforeEach(async () => {
       await flcmAgent.init();
       
-      failingAgent = new MockAgent({
-        id: 'failing-agent',
-        name: 'Failing Agent',
-        title: 'Failing Agent',
-        icon: '❌',
-        whenToUse: 'testing',
-        enabled: true,
-        priority: 1,
-        timeout: 5000,
-        retryAttempts: 3
-      });
+      failingAgent = new MockAgent('failing-agent.yaml');
 
       // Make agent fail on first call
       let callCount = 0;
@@ -298,17 +278,7 @@ describe('FLCMAgent', () => {
     beforeEach(async () => {
       await flcmAgent.init();
       
-      alwaysFailingAgent = new MockAgent({
-        id: 'always-failing',
-        name: 'Always Failing Agent',
-        title: 'Always Failing Agent',
-        icon: '💥',
-        whenToUse: 'testing',
-        enabled: true,
-        priority: 1,
-        timeout: 5000,
-        retryAttempts: 3
-      });
+      alwaysFailingAgent = new MockAgent('always-failing.yaml');
 
       // Make agent always fail
       jest.spyOn(alwaysFailingAgent, 'process').mockImplementation(async () => {
@@ -375,17 +345,7 @@ describe('FLCMAgent', () => {
       await flcmAgent.init();
       
       // Create unhealthy agent
-      const unhealthyAgent = new MockAgent({
-        id: 'unhealthy',
-        name: 'Unhealthy Agent',
-        title: 'Unhealthy Agent',
-        icon: '🤒',
-        whenToUse: 'testing',
-        enabled: true,
-        priority: 1,
-        timeout: 5000,
-        retryAttempts: 3
-      });
+      const unhealthyAgent = new MockAgent('unhealthy.yaml');
       
       jest.spyOn(unhealthyAgent, 'isHealthy').mockReturnValue(false);
       flcmAgent.registerAgent(unhealthyAgent);

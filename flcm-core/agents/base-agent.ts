@@ -125,8 +125,8 @@ export class AgentError extends Error {
  * All FLCM agents extend this class
  */
 export abstract class BaseAgent extends EventEmitter {
-  protected config: AgentConfig;
-  protected persona: AgentPersona;
+  protected config: AgentConfig = {} as AgentConfig;
+  protected persona: AgentPersona = {} as AgentPersona;
   protected state: AgentState;
   protected basePath: string;
   protected performanceTracker: Map<string, number>;
@@ -326,7 +326,7 @@ export abstract class BaseAgent extends EventEmitter {
       
       // Attempt recovery if appropriate
       const recoveryResult = await this.attemptErrorRecovery(enhancedError, () => 
-        this.processInput(input, context)
+        this.execute(input)
       );
       
       if (recoveryResult.success) {
@@ -486,7 +486,7 @@ export abstract class BaseAgent extends EventEmitter {
       throw new Error('Agent configuration not loaded');
     }
     
-    const required = ['id', 'name', 'title'];
+    const required: (keyof AgentConfig)[] = ['id', 'name', 'title'];
     for (const field of required) {
       if (!this.config[field]) {
         throw new Error(`Required configuration field missing: ${field}`);
@@ -661,7 +661,7 @@ export abstract class BaseAgent extends EventEmitter {
     const timer = this.performanceMonitor.startTiming(this.config.id, operation, context);
     
     return fn().finally(() => {
-      timer.stop(undefined, [operation]);
+      timer.stop();
     });
   }
 

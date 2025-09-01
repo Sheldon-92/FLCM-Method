@@ -54,6 +54,8 @@ exports.AgentError = AgentError;
 class BaseAgent extends events_1.EventEmitter {
     constructor(configPath) {
         super();
+        this.config = {};
+        this.persona = {};
         this.basePath = path.join(process.cwd(), '.flcm-core');
         this.performanceTracker = new Map();
         this.errorHandler = (0, error_handler_1.getErrorHandler)();
@@ -191,7 +193,7 @@ class BaseAgent extends events_1.EventEmitter {
             });
             this.updateState('error', enhancedError);
             // Attempt recovery if appropriate
-            const recoveryResult = await this.attemptErrorRecovery(enhancedError, () => this.processInput(input, context));
+            const recoveryResult = await this.attemptErrorRecovery(enhancedError, () => this.execute(input));
             if (recoveryResult.success) {
                 this.updateState('ready');
                 return recoveryResult.result;
@@ -455,7 +457,7 @@ class BaseAgent extends events_1.EventEmitter {
     trackPerformance(operation, fn, context = {}) {
         const timer = this.performanceMonitor.startTiming(this.config.id, operation, context);
         return fn().finally(() => {
-            timer.stop(undefined, [operation]);
+            timer.stop();
         });
     }
     /**
