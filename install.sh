@@ -13,8 +13,9 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-FLCM_VERSION="1.0.0"
-INSTALL_DIR="${HOME}/.flcm"
+FLCM_VERSION="2.0.0"
+CURRENT_DIR="$(pwd)"
+INSTALL_DIR="$CURRENT_DIR/flcm"  # Default to current directory
 REPO_URL="https://github.com/Sheldon-92/FLCM-Method.git"
 
 # Functions
@@ -72,18 +73,24 @@ check_requirements() {
 
 prompt_install_location() {
     echo -e "${BLUE}📁 Where would you like to install FLCM?${NC}"
-    echo -e "${YELLOW}Suggested paths:${NC}"
-    echo "  1. ${HOME}/.flcm (default - recommended)"
-    echo "  2. ${HOME}/flcm"
-    echo "  3. Custom path"
+    echo -e "${YELLOW}Current directory: ${GREEN}$CURRENT_DIR${NC}"
     echo ""
-    read -p "Choose option (1-3) or press Enter for default: " choice
+    echo -e "${YELLOW}Installation options:${NC}"
+    echo "  1. ./flcm (in current directory - ${GREEN}RECOMMENDED${NC})"
+    echo "  2. ${HOME}/.flcm (in home directory)"
+    echo "  3. ${HOME}/flcm (in home directory, visible)"
+    echo "  4. Custom path"
+    echo ""
+    read -p "Choose option (1-4) or press Enter for option 1: " choice
     
     case $choice in
         2)
-            INSTALL_DIR="${HOME}/flcm"
+            INSTALL_DIR="${HOME}/.flcm"
             ;;
         3)
+            INSTALL_DIR="${HOME}/flcm"
+            ;;
+        4)
             read -p "Enter custom path: " user_path
             if [ ! -z "$user_path" ]; then
                 # Expand ~ to home directory
@@ -91,8 +98,8 @@ prompt_install_location() {
             fi
             ;;
         *)
-            # Default option (1 or empty)
-            INSTALL_DIR="${HOME}/.flcm"
+            # Default option (1 or empty) - install in current directory
+            INSTALL_DIR="$CURRENT_DIR/flcm"
             ;;
     esac
     

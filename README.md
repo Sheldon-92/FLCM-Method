@@ -17,9 +17,16 @@
 
 ## 🎯 快速开始
 
-### 一键安装
+### 方式一：安装到当前目录（推荐）
+```bash
+# 在你想要安装的目录下运行
+curl -fsSL https://raw.githubusercontent.com/Sheldon-92/FLCM-Method/main/install-here.sh | bash
+```
+
+### 方式二：交互式安装（可选择位置）
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Sheldon-92/FLCM-Method/main/install.sh | bash
+# 会提示选择安装位置：当前目录、home目录等
 ```
 
 ### 基本使用
