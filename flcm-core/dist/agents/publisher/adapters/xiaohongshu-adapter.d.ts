@@ -1,5 +1,5 @@
 /**
- * Xiaohongshu (�f) Platform Adapter
+ * Xiaohongshu (小红书) Platform Adapter
  * Visual-heavy, emoji-rich, lifestyle-focused content
  */
 import { ContentDocument } from '../../../shared/pipeline/document-schema';
@@ -61,5 +61,12 @@ export declare class XiaohongshuAdapter implements PlatformAdapter {
      * Get lifestyle-related hashtags
      */
     private getLifestyleHashtags;
-    if(content: any, includes: any): any;
+    /**
+     * Extract keywords from content
+     */
+    private extractKeywords;
+    /**
+     * Calculate optimization score
+     */
+    private calculateOptimizationScore;
 }

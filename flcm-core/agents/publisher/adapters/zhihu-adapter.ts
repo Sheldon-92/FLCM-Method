@@ -1,5 +1,5 @@
 /**
- * Zhihu (�N) Platform Adapter
+ * Zhihu (知乎) Platform Adapter
  * Knowledge-focused, professional, in-depth content
  */
 
@@ -41,7 +41,6 @@ export class ZhihuAdapter implements PlatformAdapter {
   }
 
   async optimize(content: PlatformContent): Promise<PlatformContent> {
-    // Add table of contents if long enough
     if (content.body.length > 2000) {
       content.body = this.addTableOfContents(content.body) + '\n\n' + content.body;
     }
@@ -51,7 +50,7 @@ export class ZhihuAdapter implements PlatformAdapter {
   }
 
   generateHashtags(content: string): string[] {
-    const topics = ['���', 'r'', '�}�', '��', 'ό;�'];
+    const topics = ['知识分享', '干货', '学习', '深度思考', '专业分析'];
     return topics.slice(0, 3);
   }
 
@@ -67,35 +66,34 @@ export class ZhihuAdapter implements PlatformAdapter {
   }
 
   getOptimalTime(): string {
-    return '09:00'; // Morning for professional content
+    return '09:00';
   }
 
   private createProfessionalTitle(original: string): string {
-    const prefixes = ['��', '��', '8Á�', ''];
+    const prefixes = ['深度解析：', '深度思考：', '专业分析：', ''];
     const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
     return prefix + original;
   }
 
   private enhanceWithDepth(content: string): string {
-    // Add section headers for better structure
     const sections = content.split('\n\n');
     return sections.map((section, i) => {
       if (i > 0 && i % 3 === 0 && !section.startsWith('#')) {
-        return `### �� ${Math.floor(i/3) + 1}\n\n${section}`;
+        return `### 第 ${Math.floor(i/3) + 1} 部分\n\n${section}`;
       }
       return section;
     }).join('\n\n');
   }
 
   private addReferences(content: string): string {
-    return content + '\n\n---\n�D�\n- ����Lv\n- ���ό;�';
+    return content + '\n\n---\n参考资料：\n- 基于深度分析整理\n- 结合专业知识总结';
   }
 
   private addTableOfContents(content: string): string {
     const headers = content.match(/^###?\s+.+$/gm) || [];
     if (headers.length < 3) return '';
     
-    let toc = '**�U**\n\n';
+    let toc = '**目录**\n\n';
     headers.forEach(header => {
       const title = header.replace(/^#+\s+/, '');
       toc += `- ${title}\n`;
@@ -106,7 +104,7 @@ export class ZhihuAdapter implements PlatformAdapter {
 
   private optimizeLength(content: string): string {
     if (content.length > this.maxLength) {
-      return content.substring(0, this.maxLength - 100) + '\n\n...[�t������]';
+      return content.substring(0, this.maxLength - 100) + '\n\n...[继续阅读全文]';
     }
     return content;
   }
@@ -119,10 +117,9 @@ export class ZhihuAdapter implements PlatformAdapter {
   private calculateOptimizationScore(content: string): number {
     let score = 70;
     
-    // Depth bonus
     if (content.length > 2000) score += 10;
     if (content.includes('###')) score += 10;
-    if (content.includes('�')) score += 10;
+    if (content.includes('参考')) score += 10;
     
     return Math.min(100, score);
   }

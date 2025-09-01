@@ -367,7 +367,7 @@ describe('FLCMAgent', () => {
       await mockAgent.init();
       flcmAgent.registerAgent(mockAgent);
 
-      const health = await flcmAgent.health Check();
+      const health = await flcmAgent.healthCheck();
       expect(health['scholar']).toBe(true);
     });
 
