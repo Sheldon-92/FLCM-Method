@@ -1,167 +1,71 @@
 /**
- * FLCM Command System Entry Point
- * Main interface for Claude Code command integration
+ * FLCM Command System Main Export
+ * Central entry point for all FLCM command functionality
  */
 
-import executeCommand, { router } from './utils/command-router';
-import { handleError } from './utils/error-handler';
+export { CommandRouter, router, default as executeCommand } from './command-router';
+export { ScholarHandler } from './scholar-handler';
+export { CreatorHandler } from './creator-handler';
+export { PublisherHandler } from './publisher-handler';
+export { WorkflowHandler } from './workflow-handler';
+export {
+  CommandContext,
+  CommandResult,
+  CommandHandler,
+  CommandDefinition,
+  CommandParameter,
+  ProgressCallback,
+  FLCMCommandError
+} from './types';
+
+// Main command execution function
+import { router } from './command-router';
+import { CommandResult } from './types';
 
 /**
- * Parse command string into components
+ * Execute FLCM command from Claude interface
+ * This is the main entry point called by Claude Code
  */
-function parseCommand(commandString: string): {
-  command: string;
-  args: string[];
-  options: Record<string, any>;
-} {
-  const parts = commandString.trim().split(/\s+/);
-  const command = parts[0];
-  const args: string[] = [];
-  const options: Record<string, any> = {};
-
-  for (let i = 1; i < parts.length; i++) {
-    const part = parts[i];
-    
-    if (part.startsWith('--')) {
-      // Long option
-      const [key, value] = part.substring(2).split('=');
-      options[key] = value || true;
-    } else if (part.startsWith('-')) {
-      // Short option
-      const key = part.substring(1);
-      options[key] = true;
-    } else {
-      // Argument
-      args.push(part);
-    }
-  }
-
-  return { command, args, options };
+export async function executeFLCMCommand(
+  command: string,
+  args: string[] = [],
+  options: Record<string, any> = {},
+  user?: any
+): Promise<CommandResult> {
+  const context = { command, args, options, user };
+  return await router.execute(context);
 }
 
 /**
- * Main command handler for Claude Code
- * This is the entry point for all FLCM commands
+ * Get available FLCM commands
  */
-export async function flcm(input: string = 'help'): Promise<void> {
-  try {
-    // Parse the input
-    const { command, args, options } = parseCommand(input);
-    
-    // Build full command name if not provided
-    let fullCommand = command;
-    if (!command.includes(':')) {
-      fullCommand = `flcm:${command}`;
-    }
-    if (!fullCommand.startsWith('/')) {
-      fullCommand = '/' + fullCommand;
-    }
-
-    // Execute the command
-    await executeCommand(fullCommand, args, options);
-    
-  } catch (error: any) {
-    await handleError(error);
-  }
+export function getAvailableCommands(): string[] {
+  return [
+    'flcm:help',
+    'flcm:status', 
+    'flcm:history',
+    'flcm:scholar',
+    'flcm:create',
+    'flcm:creator',
+    'flcm:publish',
+    'flcm:publisher',
+    'flcm:adapter',
+    'flcm:flow',
+    'flcm:quick',
+    'flcm:standard'
+  ];
 }
-
-/**
- * Shortcut commands for common operations
- */
-export const commands = {
-  // System commands
-  init: async (options?: any) => flcm(`init ${options || ''}`),
-  help: async (command?: string) => flcm(`help ${command || ''}`),
-  status: async (verbose?: boolean) => flcm(`status ${verbose ? '--verbose' : ''}`),
-  
-  // Workflow commands (to be implemented)
-  quick: async (source: string) => flcm(`quick "${source}"`),
-  standard: async (source: string) => flcm(`standard "${source}"`),
-  
-  // Agent commands (to be implemented)
-  collect: async (source: string) => flcm(`collect "${source}"`),
-  scholar: async (brief: string) => flcm(`scholar "${brief}"`),
-  create: async (synthesis: string) => flcm(`create "${synthesis}"`),
-  adapt: async (draft: string, platform?: string) => 
-    flcm(`adapt "${draft}" ${platform ? `--platform=${platform}` : ''}`),
-  
-  // Configuration command
-  config: async (action?: string, key?: string, value?: string) => {
-    const parts = ['config'];
-    if (action) parts.push(action);
-    if (key) parts.push(key);
-    if (value) parts.push(value);
-    return flcm(parts.join(' '));
-  }
-};
 
 /**
  * Get command suggestions for autocomplete
  */
-export function getSuggestions(partial: string): string[] {
+export function getCommandSuggestions(partial: string): string[] {
   return router.getSuggestions(partial);
 }
 
 /**
  * Get command history
  */
-export function getHistory(): Array<any> {
+export function getCommandHistory() {
   return router.getHistory();
 }
-
-// Export default handler
-export default flcm;
-
-/**
- * Command registration for Claude Code
- * These would be registered with Claude Code's command system
- */
-export const FLCM_COMMANDS = {
-  '/flcm': flcm,
-  '/flcm:init': () => commands.init(),
-  '/flcm:help': () => commands.help(),
-  '/flcm:status': () => commands.status(),
-  '/flcm:quick': (source: string) => commands.quick(source),
-  '/flcm:standard': (source: string) => commands.standard(source),
-  '/flcm:collect': (source: string) => commands.collect(source),
-  '/flcm:scholar': (brief: string) => commands.scholar(brief),
-  '/flcm:create': (synthesis: string) => commands.create(synthesis),
-  '/flcm:adapt': (draft: string, platform?: string) => commands.adapt(draft, platform),
-  '/flcm:config': () => commands.config(),
-  
-  // Aliases
-  '/fc': flcm,
-  '/fc:init': () => commands.init(),
-  '/fc:help': () => commands.help(),
-  '/fc:status': () => commands.status(),
-  '/fc:q': (source: string) => commands.quick(source),
-  '/fc:s': (source: string) => commands.standard(source),
-  '/fc:c': (source: string) => commands.collect(source),
-  '/fc:?': () => commands.help(),
-};
-
-/**
- * CLI Usage Examples:
- * 
- * Initialize system:
- *   await flcm('init')
- *   await commands.init()
- * 
- * Get help:
- *   await flcm('help')
- *   await flcm('help quick')
- *   await commands.help('quick')
- * 
- * Check status:
- *   await flcm('status')
- *   await flcm('status --verbose')
- *   await commands.status(true)
- * 
- * Quick content generation:
- *   await flcm('quick "https://example.com/article"')
- *   await commands.quick('https://example.com/article')
- * 
- * Standard content pipeline:
- *   await flcm('standard "path/to/notes.md"')
- *   await commands.standard('path/to/notes.md')
- */

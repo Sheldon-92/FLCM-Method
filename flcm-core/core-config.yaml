@@ -1,153 +1,172 @@
-# FLCM Core Configuration
-# Version: 1.0.0
+# FLCM 2.0 Core Configuration
+# This is the default configuration file for FLCM
+# User overrides can be placed in:
+#   - ./.flcm-config.yaml (project root)
+#   - ~/.flcm/config.yaml (user home)
+# Environment variables: FLCM_* (e.g., FLCM_MAIN_TIMEOUT=60000)
 
-# Slash command prefix for Claude Code
-slashPrefix: FLCM
+# System version and environment
+version: "2.0.0"
+environment: "production"  # development, production, test
 
-system:
-  name: "FLCM - Friction Lab Content Maker"
-  version: "1.0.0"
-  mode: "development" # development | production
-  
+# Main agent orchestrator configuration
+main:
+  timeout: 30000           # Maximum time for agent operations (ms)
+  retryAttempts: 3        # Number of retry attempts on failure
+  logLevel: "info"        # error, warn, info, debug, verbose
+  circuitBreaker:
+    failureThreshold: 5   # Failures before circuit opens
+    cooldownMs: 30000     # Time before testing closed circuit
+    testRequestTimeout: 5000  # Timeout for test requests
+
+# Agent system configuration
 agents:
-  collector:
-    enabled: true
-    timeout: 300 # seconds
-    methodologies:
-      - rice-framework
-      - signal-extraction
-  
-  scholar:
-    enabled: true
-    timeout: 300
-    methodologies:
-      - progressive-depth
-      - analogy-mapping
-  
-  creator:
-    enabled: true
-    timeout: 300
-    methodologies:
-      - spark-method
-      - voice-dna
-  
-  adapter:
-    enabled: true
-    timeout: 300
-    platforms:
-      - linkedin
-      - twitter
-      - medium
-      - substack
-
-workflows:
-  quick_mode:
-    enabled: true
-    max_duration: 1800 # 30 minutes
-    agents:
-      - collector
-      - creator
-    skip_learning: true
-    
-  standard_mode:
-    enabled: true
-    max_duration: 3600 # 60 minutes
-    agents:
-      - collector
-      - scholar
-      - creator
-      - adapter
-    full_pipeline: true
-
-document_pipeline:
-  format: "markdown"
-  frontmatter: true
-  obsidian_compatible: true
-  auto_save: true
-  
-methodologies:
-  transparency: true
-  logging: true
-  user_visibility: "full" # full | summary | minimal
-
-user_preferences:
-  default_mode: "quick"
-  voice_profile: "default"
-  platforms:
-    primary: "linkedin"
-    secondary: ["twitter", "medium"]
-  
-  obsidian:
-    enabled: false
-    vault_path: ""
-    auto_file: false
-    
-validation:
-  auto_validate: true
-  strict_mode: false
-  quality_threshold: 0.7
-
-paths:
-  templates: ".flcm-core/templates"
-  methodologies: ".flcm-core/methodologies"
-  tasks: ".flcm-core/tasks"
-  output: "output"
-  logs: "logs"
-
-debug:
   enabled: true
-  verbose: false
-  log_level: "info" # debug | info | warning | error
+  registry:
+    - scholar
+    - creator
+    - publisher
+  communication:
+    protocol: "internal"
+    timeout: 15000
 
-# FLCM 2.0 Version Routing Configuration
-flcm:
-  defaultVersion: "1.0"  # Default to stable version
-  userOverrides:
-    enabled: true
-    configPath: ".flcm/user-config.yaml"
-  featureFlags:
-    v2_mentor: false
-    v2_creator: false
-    v2_publisher: false
-    v2_obsidian: false
-    v2_beta_users: false
-    v2_internal_testing: false
+# Scholar agent - Deep learning and analysis
+scholar:
+  enabled: true
+  frameworks:             # Professional analysis frameworks
+    - "SWOT-USED"        # Strengths, Weaknesses, Opportunities, Threats + USED
+    - "SCAMPER"          # Substitute, Combine, Adapt, Modify, Put to other uses, Eliminate, Reverse
+    - "Socratic"         # Question-based deep thinking
+    - "5W2H"            # What, When, Where, Who, Why, How, How much
+    - "Pyramid"         # Hierarchical information structure
+  inputTypes:           # Supported input formats
+    - "text"
+    - "markdown"
+    - "pdf"
+    - "video"
+    - "audio"
+    - "image"
+    - "webpage"
+    - "code"
+    - "spreadsheet"
+  maxInputSize: 10485760  # Maximum input file size (10MB)
+  timeout: 45000          # Scholar-specific timeout
+  processingOptions:
+    parallelFrameworks: true   # Run frameworks in parallel
+    cacheResults: true         # Cache analysis results
+    maxConcurrency: 3          # Maximum parallel operations
 
-# Version-specific configurations
-versions:
-  "1.0":
-    agents:
-      - collector
-      - scholar
-      - creator
-      - adapter
-    pipeline:
-      maxDepth: 5
-      timeout: 20000
-  "2.0":
-    layers:
-      - mentor
-      - creator
-      - publisher
-    frameworks:
+# Creator agent - Content generation with Voice DNA
+creator:
+  enabled: true
+  modes:
+    quick:
       enabled: true
-      preload: false
-    obsidian:
-      enabled: false
-      syncInterval: 5000
+      timeout: 5000
+      maxWords: 800        # Target word count for quick mode
+    standard:
+      enabled: true
+      timeout: 10000
+      maxWords: 1500       # Target word count for standard mode
+    custom:
+      enabled: true
+      interactive: true    # Allow user interaction during creation
+      maxIterations: 5     # Maximum refinement iterations
+  voiceDNA:
+    minSamples: 5          # Minimum samples for voice analysis
+    analysisDepth: "standard"  # basic, standard, deep
+    cacheProfiles: true    # Cache voice profiles
+    updateFrequency: 30    # Days between profile updates
 
-# Health check configuration
-health:
+# Publisher agent - Multi-platform adaptation
+publisher:
   enabled: true
-  interval: 60000  # 1 minute
-  endpoints:
-    v1: "/health/v1"
-    v2: "/health/v2"
-    combined: "/health"
+  platforms:
+    xiaohongshu:           # 小红书 settings
+      enabled: true
+      maxLength: 1000
+      hashtags: true
+      hashtagCount: 5
+      emojiLevel: "moderate"  # none, minimal, moderate, heavy
+    zhihu:                 # 知乎 settings
+      enabled: true
+      maxLength: 5000
+      includeReferences: true
+      tocGeneration: true  # Generate table of contents
+    wechat:                # 微信公众号 settings
+      enabled: true
+      maxLength: 3000
+      formatting: "rich"   # simple, rich
+    linkedin:              # LinkedIn settings
+      enabled: true
+      maxLength: 2000
+      hashtags: true
+      professionalTone: true
+  scheduling:
+    enabled: false
+    defaultDelay: 3600000  # Default delay before publishing (1 hour)
+    optimalTimes:          # Platform-specific optimal posting times
+      xiaohongshu: ["20:00", "21:00"]
+      zhihu: ["09:00", "19:00"]
+      wechat: ["08:00", "12:00", "18:00"]
+      linkedin: ["09:00", "17:00"]
 
-# Migration settings
-migration:
+# Methodologies configuration
+methodologies:
   enabled: true
-  batchSize: 100
-  validateData: true
-  backupBeforeMigration: true
+  categories:
+    collection:
+      - rice
+      - signal-to-noise
+    learning:
+      - progressive-depth
+      - analogy-generator
+    creation:
+      - voice-dna
+      - spark-framework
+    adaptation:
+      - platform-optimizer
+      - hashtag-generator
+
+# Platform configurations  
+platforms:
+  enabled: true
+  supported:
+    - xiaohongshu
+    - zhihu
+    - wechat
+    - linkedin
+    - twitter
+  defaults:
+    maxLength: 1500
+    hashtags: true
+    optimization: true
+
+# Document flow configuration
+documents:
+  inputPath: "./data/input"       # Where to read input documents
+  insightsPath: "./data/insights" # Where to store analysis results
+  contentPath: "./data/content"   # Where to store created content
+  publishedPath: "./data/published" # Where to store published content
+  archivePath: "./data/archive"   # Where to archive old content
+  watchEnabled: false              # Watch for new input files
+  autoProcess: false               # Automatically process new files
+  preserveMetadata: true           # Preserve file metadata
+  versionControl:
+    enabled: false
+    maxVersions: 10                # Maximum versions to keep
+    diffTracking: false            # Track changes between versions
+
+# Feature flags for experimental features
+features:
+  experimentalVoiceDNA: false      # Advanced voice analysis
+  advancedAnalytics: false         # Detailed performance analytics
+  autoPublish: false                # Automatic publishing
+  multiLanguageSupport: false      # Multi-language content
+  collaborativeMode: false         # Multi-user collaboration
+
+# Custom configuration (user-defined)
+custom:
+  # Add your custom configuration here
+  # Example:
+  # myCustomSetting: "value"

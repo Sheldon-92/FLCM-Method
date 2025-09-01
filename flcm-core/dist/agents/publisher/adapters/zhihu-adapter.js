@@ -1,0 +1,133 @@
+"use strict";
+/**
+ * Zhihu (�N) Platform Adapter
+ * Knowledge-focused, professional, in-depth content
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ZhihuAdapter = void 0;
+const logger_1 = require("../../../shared/utils/logger");
+const logger = (0, logger_1.createLogger)('ZhihuAdapter');
+class ZhihuAdapter {
+    constructor() {
+        this.platform = 'zhihu';
+        this.maxLength = 5000;
+    }
+    async adapt(content) {
+        logger.debug('Adapting content for Zhihu');
+        const title = this.createProfessionalTitle(content.title);
+        let body = this.enhanceWithDepth(content.content);
+        body = this.addReferences(body);
+        body = this.optimizeLength(body);
+        const hashtags = this.generateHashtags(body);
+        const keywords = this.extractKeywords(body);
+        const visualSuggestions = this.suggestVisuals(body);
+        return {
+            platform: this.platform,
+            title,
+            body,
+            hashtags,
+            keywords,
+            visualSuggestions,
+            metadata: {
+                length: body.length,
+                readingTime: Math.ceil(body.length / 300),
+                optimizationScore: this.calculateOptimizationScore(body),
+            },
+        };
+    }
+    async optimize(content) {
+        // Add table of contents if long enough
+        if (content.body.length > 2000) {
+            content.body = this.addTableOfContents(content.body) + '\n\n' + content.body;
+        }
+        content.metadata.optimizationScore = this.calculateOptimizationScore(content.body);
+        return content;
+    }
+    generateHashtags(content) {
+        const topics = ['���', 'r', ', '];
+    }
+}
+exports.ZhihuAdapter = ZhihuAdapter;
+return topics.slice(0, 3);
+suggestVisuals(content, string);
+index_1.VisualRecommendation[];
+{
+    return [
+        {
+            type: 'infographic',
+            description: 'Data visualization or concept diagram',
+            style: 'professional-clean',
+            elements: ['charts', 'diagrams', 'statistics'],
+        },
+    ];
+}
+getOptimalTime();
+string;
+{
+    return '09:00'; // Morning for professional content
+}
+createProfessionalTitle(original, string);
+string;
+{
+    const prefixes = ['��', '��', '8Á�', ''];
+    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+    return prefix + original;
+}
+enhanceWithDepth(content, string);
+string;
+{
+    // Add section headers for better structure
+    const sections = content.split('\n\n');
+    return sections.map((section, i) => {
+        if (i > 0 && i % 3 === 0 && !section.startsWith('#')) {
+            return `### �� ${Math.floor(i / 3) + 1}\n\n${section}`;
+        }
+        return section;
+    }).join('\n\n');
+}
+addReferences(content, string);
+string;
+{
+    return content + '\n\n---\n�D�\n- ����Lv\n- ���ό;�';
+}
+addTableOfContents(content, string);
+string;
+{
+    const headers = content.match(/^###?\s+.+$/gm) || [];
+    if (headers.length < 3)
+        return '';
+    let toc = '**�U**\n\n';
+    headers.forEach(header => {
+        const title = header.replace(/^#+\s+/, '');
+        toc += `- ${title}\n`;
+    });
+    return toc;
+}
+optimizeLength(content, string);
+string;
+{
+    if (content.length > this.maxLength) {
+        return content.substring(0, this.maxLength - 100) + '\n\n...[�t������]';
+    }
+    return content;
+}
+extractKeywords(content, string);
+string[];
+{
+    const techTerms = content.match(/[A-Z][a-z]+|[A-Z]{2,}|[\u4e00-\u9fa5]{2,4}/g) || [];
+    return [...new Set(techTerms)].slice(0, 10);
+}
+calculateOptimizationScore(content, string);
+number;
+{
+    let score = 70;
+    // Depth bonus
+    if (content.length > 2000)
+        score += 10;
+    if (content.includes('###'))
+        score += 10;
+    if (content.includes('�'))
+        score += 10;
+    return Math.min(100, score);
+}
+//# sourceMappingURL=zhihu-adapter.js.map

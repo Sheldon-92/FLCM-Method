@@ -3,7 +3,7 @@
 
 id: adapter
 name: Adapter Agent
-version: 1.0.0
+version: 2.0.0
 description: Optimizes content for specific platforms while maintaining message integrity
 icon: 🎯
 status: active

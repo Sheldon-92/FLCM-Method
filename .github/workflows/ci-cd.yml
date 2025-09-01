@@ -1,0 +1,295 @@
+name: FLCM 2.0 CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, feature/* ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: '.flcm-core/package-lock.json'
+    
+    - name: Install dependencies
+      working-directory: .flcm-core
+      run: npm ci
+    
+    - name: Run linting
+      working-directory: .flcm-core
+      run: npm run lint
+    
+    - name: Run type checking
+      working-directory: .flcm-core
+      run: npm run type-check
+    
+    - name: Run unit tests
+      working-directory: .flcm-core
+      run: npm run test:unit
+    
+    - name: Run integration tests
+      working-directory: .flcm-core
+      run: npm run test:integration
+    
+    - name: Generate test coverage
+      working-directory: .flcm-core
+      run: npm run test:coverage
+    
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: .flcm-core/coverage/lcov.info
+        fail_ci_if_error: false
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: '.flcm-core/package-lock.json'
+    
+    - name: Install dependencies
+      working-directory: .flcm-core
+      run: npm ci
+    
+    - name: Build TypeScript
+      working-directory: .flcm-core
+      run: npm run build
+    
+    - name: Generate API documentation
+      working-directory: .flcm-core
+      run: npm run docs:api
+    
+    - name: Build documentation website
+      working-directory: .flcm-core
+      run: npm run docs:build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: flcm-build-${{ github.sha }}
+        path: |
+          .flcm-core/dist/
+          .flcm-core/docs/.vuepress/dist/
+          .flcm-core/docs/api/
+        retention-days: 30
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Run security audit
+      working-directory: .flcm-core
+      run: npm audit --audit-level=moderate
+    
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/init@v3
+      with:
+        languages: javascript
+    
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: '.flcm-core/package-lock.json'
+    
+    - name: Install dependencies
+      working-directory: .flcm-core
+      run: npm ci
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: flcm-build-${{ github.sha }}
+        path: .flcm-core/
+    
+    - name: Run performance tests
+      working-directory: .flcm-core
+      run: npm run test:performance
+
+  deploy-docs:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: [build, security]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: '.flcm-core/package-lock.json'
+    
+    - name: Install dependencies
+      working-directory: .flcm-core
+      run: npm ci
+    
+    - name: Build documentation
+      working-directory: .flcm-core
+      run: npm run docs:generate
+    
+    - name: Deploy to Netlify
+      uses: nwtgck/actions-netlify@v3.0
+      with:
+        publish-dir: '.flcm-core/docs/.vuepress/dist'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions"
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [test, build, security, performance]
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: '.flcm-core/package-lock.json'
+    
+    - name: Install dependencies
+      working-directory: .flcm-core
+      run: npm ci
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: flcm-build-${{ github.sha }}
+        path: .flcm-core/
+    
+    - name: Extract version from tag
+      id: extract_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+    
+    - name: Create release package
+      run: |
+        mkdir -p release-package
+        cp -r .flcm-core/* release-package/
+        cp install*.sh release-package/
+        cp auto-install.sh release-package/
+        cp clean-release.sh release-package/
+        cp README.md release-package/
+        cp CHANGELOG.md release-package/
+        cp LICENSE release-package/
+        tar -czf flcm-v${{ steps.extract_version.outputs.VERSION }}.tar.gz release-package/
+        zip -r flcm-v${{ steps.extract_version.outputs.VERSION }}.zip release-package/
+    
+    - name: Generate release notes
+      id: release_notes
+      run: |
+        CHANGELOG_SECTION=$(sed -n "/## \[${{ steps.extract_version.outputs.VERSION }}\]/,/## \[/p" CHANGELOG.md | head -n -1)
+        echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+        echo "$CHANGELOG_SECTION" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+    
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.extract_version.outputs.VERSION }}
+        release_name: FLCM 2.0 v${{ steps.extract_version.outputs.VERSION }}
+        body: ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+        draft: false
+        prerelease: false
+    
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: flcm-v${{ steps.extract_version.outputs.VERSION }}.tar.gz
+        asset_name: flcm-v${{ steps.extract_version.outputs.VERSION }}.tar.gz
+        asset_content_type: application/gzip
+    
+    - name: Upload ZIP release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: flcm-v${{ steps.extract_version.outputs.VERSION }}.zip
+        asset_name: flcm-v${{ steps.extract_version.outputs.VERSION }}.zip
+        asset_content_type: application/zip
+
+  notify:
+    name: Notify Completion
+    runs-on: ubuntu-latest
+    needs: [test, build, security, performance]
+    if: always()
+    
+    steps:
+    - name: Notify on success
+      if: ${{ needs.test.result == 'success' && needs.build.result == 'success' && needs.security.result == 'success' && needs.performance.result == 'success' }}
+      run: |
+        echo "✅ All CI/CD pipeline jobs completed successfully!"
+        echo "- ✅ Tests passed"
+        echo "- ✅ Build succeeded"
+        echo "- ✅ Security scan passed"
+        echo "- ✅ Performance tests passed"
+    
+    - name: Notify on failure
+      if: ${{ needs.test.result == 'failure' || needs.build.result == 'failure' || needs.security.result == 'failure' || needs.performance.result == 'failure' }}
+      run: |
+        echo "❌ CI/CD pipeline failed!"
+        echo "- Tests: ${{ needs.test.result }}"
+        echo "- Build: ${{ needs.build.result }}"
+        echo "- Security: ${{ needs.security.result }}"
+        echo "- Performance: ${{ needs.performance.result }}"
+        exit 1

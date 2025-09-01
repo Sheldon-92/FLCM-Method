@@ -1,0 +1,44 @@
+{
+  "entryPoints": [
+    "./index.ts",
+    "./agents/types.ts",
+    "./agents/scholar/",
+    "./agents/creator/",
+    "./agents/publisher/",
+    "./shared/",
+    "./pipeline/",
+    "./methodologies/"
+  ],
+  "out": "docs/api",
+  "theme": "default",
+  "includeVersion": true,
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "excludeInternal": false,
+  "readme": "README.md",
+  "name": "FLCM 2.0 API Documentation",
+  "navigationLinks": {
+    "Home": "https://github.com/Sheldon-92/FLCM-Method",
+    "Repository": "https://github.com/Sheldon-92/FLCM-Method"
+  },
+  "sidebarLinks": {
+    "User Guide": "https://flcm-docs.netlify.app/guide/",
+    "API Reference": "https://flcm-docs.netlify.app/api/"
+  },
+  "plugin": [],
+  "validation": {
+    "notExported": true,
+    "invalidLink": true,
+    "notDocumented": false
+  },
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Agents",
+    "Pipeline",
+    "Methodologies",
+    "Shared",
+    "Types",
+    "*"
+  ]
+}

@@ -1,0 +1,388 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FLCM Configuration Schema",
+  "description": "Schema for FLCM 2.0 configuration files",
+  "type": "object",
+  "required": ["version", "environment", "main", "scholar", "creator", "publisher", "documents"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "FLCM version in semantic versioning format"
+    },
+    "environment": {
+      "type": "string",
+      "enum": ["development", "production", "test"],
+      "description": "Execution environment"
+    },
+    "main": {
+      "type": "object",
+      "description": "Main agent orchestrator configuration",
+      "required": ["timeout", "retryAttempts", "logLevel"],
+      "properties": {
+        "timeout": {
+          "type": "number",
+          "minimum": 1000,
+          "maximum": 300000,
+          "description": "Maximum time for agent operations in milliseconds"
+        },
+        "retryAttempts": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Number of retry attempts on failure"
+        },
+        "logLevel": {
+          "type": "string",
+          "enum": ["error", "warn", "info", "debug", "verbose"],
+          "description": "Logging level"
+        },
+        "circuitBreaker": {
+          "type": "object",
+          "properties": {
+            "failureThreshold": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "cooldownMs": {
+              "type": "number",
+              "minimum": 1000,
+              "maximum": 600000
+            },
+            "testRequestTimeout": {
+              "type": "number",
+              "minimum": 100,
+              "maximum": 30000
+            }
+          }
+        }
+      }
+    },
+    "scholar": {
+      "type": "object",
+      "description": "Scholar agent configuration",
+      "required": ["enabled", "frameworks", "inputTypes", "maxInputSize"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "frameworks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["SWOT-USED", "SCAMPER", "Socratic", "5W2H", "Pyramid"]
+          }
+        },
+        "inputTypes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": ["text", "markdown", "pdf", "video", "audio", "image", "webpage", "code", "spreadsheet"]
+          }
+        },
+        "maxInputSize": {
+          "type": "number",
+          "minimum": 1024,
+          "maximum": 104857600
+        },
+        "timeout": {
+          "type": "number",
+          "minimum": 1000,
+          "maximum": 300000
+        },
+        "processingOptions": {
+          "type": "object",
+          "properties": {
+            "parallelFrameworks": {
+              "type": "boolean"
+            },
+            "cacheResults": {
+              "type": "boolean"
+            },
+            "maxConcurrency": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10
+            }
+          }
+        }
+      }
+    },
+    "creator": {
+      "type": "object",
+      "description": "Creator agent configuration",
+      "required": ["enabled", "modes", "voiceDNA"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "modes": {
+          "type": "object",
+          "required": ["quick", "standard", "custom"],
+          "properties": {
+            "quick": {
+              "type": "object",
+              "required": ["enabled", "timeout"],
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "timeout": {
+                  "type": "number",
+                  "minimum": 1000,
+                  "maximum": 60000
+                },
+                "maxWords": {
+                  "type": "number",
+                  "minimum": 100,
+                  "maximum": 2000
+                }
+              }
+            },
+            "standard": {
+              "type": "object",
+              "required": ["enabled", "timeout"],
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "timeout": {
+                  "type": "number",
+                  "minimum": 1000,
+                  "maximum": 120000
+                },
+                "maxWords": {
+                  "type": "number",
+                  "minimum": 500,
+                  "maximum": 5000
+                }
+              }
+            },
+            "custom": {
+              "type": "object",
+              "required": ["enabled", "interactive"],
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "interactive": {
+                  "type": "boolean"
+                },
+                "maxIterations": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 10
+                }
+              }
+            }
+          }
+        },
+        "voiceDNA": {
+          "type": "object",
+          "required": ["minSamples", "analysisDepth", "cacheProfiles"],
+          "properties": {
+            "minSamples": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "analysisDepth": {
+              "type": "string",
+              "enum": ["basic", "standard", "deep"]
+            },
+            "cacheProfiles": {
+              "type": "boolean"
+            },
+            "updateFrequency": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 365
+            }
+          }
+        }
+      }
+    },
+    "publisher": {
+      "type": "object",
+      "description": "Publisher agent configuration",
+      "required": ["enabled", "platforms"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "platforms": {
+          "type": "object",
+          "properties": {
+            "xiaohongshu": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "maxLength": {
+                  "type": "number",
+                  "minimum": 100,
+                  "maximum": 5000
+                },
+                "hashtags": {
+                  "type": "boolean"
+                },
+                "hashtagCount": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 30
+                },
+                "emojiLevel": {
+                  "type": "string",
+                  "enum": ["none", "minimal", "moderate", "heavy"]
+                }
+              }
+            },
+            "zhihu": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "maxLength": {
+                  "type": "number",
+                  "minimum": 500,
+                  "maximum": 50000
+                },
+                "includeReferences": {
+                  "type": "boolean"
+                },
+                "tocGeneration": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "wechat": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "maxLength": {
+                  "type": "number",
+                  "minimum": 300,
+                  "maximum": 20000
+                },
+                "formatting": {
+                  "type": "string",
+                  "enum": ["simple", "rich"]
+                }
+              }
+            },
+            "linkedin": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "maxLength": {
+                  "type": "number",
+                  "minimum": 100,
+                  "maximum": 3000
+                },
+                "hashtags": {
+                  "type": "boolean"
+                },
+                "professionalTone": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "scheduling": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "defaultDelay": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 86400000
+            },
+            "optimalTimes": {
+              "type": "object",
+              "patternProperties": {
+                "^.*$": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):([0-5]\\d)$"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "documents": {
+      "type": "object",
+      "description": "Document flow configuration",
+      "required": ["inputPath", "insightsPath", "contentPath", "publishedPath"],
+      "properties": {
+        "inputPath": {
+          "type": "string"
+        },
+        "insightsPath": {
+          "type": "string"
+        },
+        "contentPath": {
+          "type": "string"
+        },
+        "publishedPath": {
+          "type": "string"
+        },
+        "archivePath": {
+          "type": "string"
+        },
+        "watchEnabled": {
+          "type": "boolean"
+        },
+        "autoProcess": {
+          "type": "boolean"
+        },
+        "preserveMetadata": {
+          "type": "boolean"
+        },
+        "versionControl": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "maxVersions": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "diffTracking": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "description": "Feature flags",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "custom": {
+      "type": "object",
+      "description": "Custom user configuration",
+      "additionalProperties": true
+    }
+  }
+}

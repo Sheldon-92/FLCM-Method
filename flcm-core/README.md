@@ -1,19 +1,20 @@
-# FLCM - Friction Lab Content Maker
+# FLCM 2.0 Core
 
-🚀 **Transform content creation into skill-building with persistent knowledge**
+🚀 **Next-generation intelligent content creation with 3-layer AI agent architecture**
 
 ## Overview
 
-FLCM is an AI-powered content creation system that transforms input sources into platform-optimized content while preserving your unique voice. It uses a four-agent pipeline with methodology-driven processing.
+FLCM 2.0 is a completely reimagined AI-powered content creation system using a streamlined 3-layer agent architecture (Scholar → Creator → Publisher). Built with TypeScript and following BMAD methodology principles for maximum extensibility and reliability.
 
 ## Features
 
-- 🤖 **4-Agent Pipeline**: Collector → Scholar → Creator → Adapter
-- 📚 **Methodology-Driven**: RICE, SPARK, Progressive Depth Learning
-- 🎯 **Platform Optimization**: LinkedIn, Twitter/X, WeChat, Xiaohongshu
-- 🔄 **Voice DNA Preservation**: Maintains your unique writing style
-- 📊 **Signal Detection**: Identifies high-value content signals
-- 🧠 **Knowledge Synthesis**: Progressive depth learning system
+- 🤖 **3-Layer Architecture**: Scholar → Creator → Publisher
+- 📚 **5 Professional Frameworks**: SWOT-USED, SCAMPER, Socratic, 5W2H, Pyramid
+- 🎯 **4 Platform Support**: 小红书, 知乎, 微信公众号, LinkedIn
+- 🔄 **Voice DNA System**: ML-based style consistency (>90% match)
+- 🛡️ **Circuit Breaker Pattern**: Fault-tolerant with graceful degradation
+- ⚡ **TypeScript Strict**: Enterprise-grade type safety and performance
+- 🧪 **Comprehensive Testing**: >80% coverage with integration tests
 
 ## Installation
 

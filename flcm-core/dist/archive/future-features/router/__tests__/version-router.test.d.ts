@@ -1,0 +1,4 @@
+/**
+ * Version Router Tests
+ */
+export {};

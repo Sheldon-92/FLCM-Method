@@ -1,0 +1,141 @@
+/**
+ * FLCM Observability Manager
+ * Comprehensive observability, monitoring, and alerting system for FLCM 2.0
+ */
+/// <reference types="node" />
+import { ObservabilityManager, ObservabilityConfiguration, ObservabilityComponent, MonitoredService, AlertRule, Incident, ServiceLevelObjective, Dashboard, SystemHealth, SystemMetrics, ObservabilitySystemState, IncidentStatus, LogLevel, TimeRange, ServiceMetrics } from './types';
+import { EventEmitter } from 'events';
+interface ObservabilityManagerConfig {
+    id: string;
+    name: string;
+    configuration: ObservabilityConfiguration;
+    storage: {
+        metrics: string;
+        logs: string;
+        traces: string;
+        events: string;
+    };
+    endpoints: {
+        api: string;
+        metrics: string;
+        logs: string;
+        traces: string;
+        alerts: string;
+        dashboards: string;
+    };
+    security: {
+        authentication: boolean;
+        encryption: boolean;
+        audit: boolean;
+    };
+    clustering: {
+        enabled: boolean;
+        nodes: string[];
+        replication: number;
+    };
+}
+export declare class FLCMObservabilityManager extends EventEmitter implements ObservabilityManager {
+    private logger;
+    private config;
+    private system;
+    private components;
+    private services;
+    private alerts;
+    private incidents;
+    private slos;
+    private dashboards;
+    private metricsSystem;
+    private logsSystem;
+    private tracesSystem;
+    private eventsSystem;
+    private alertingSystem;
+    private visualizationSystem;
+    private processingSystem;
+    private storageSystem;
+    private securitySystem;
+    private performanceSystem;
+    private complianceSystem;
+    private anomalyDetector;
+    private rootCauseAnalyzer;
+    private capacityPlanner;
+    private costOptimizer;
+    private sliCalculator;
+    private healthMonitor;
+    private performanceMonitor;
+    private capacityMonitor;
+    constructor(config: ObservabilityManagerConfig);
+    initialize(): Promise<void>;
+    registerComponent(component: ObservabilityComponent): Promise<void>;
+    unregisterComponent(componentId: string): Promise<void>;
+    getComponent(componentId: string): Promise<ObservabilityComponent | undefined>;
+    listComponents(): Promise<ObservabilityComponent[]>;
+    addService(service: MonitoredService): Promise<void>;
+    removeService(serviceId: string): Promise<void>;
+    getService(serviceId: string): Promise<MonitoredService | undefined>;
+    listServices(): Promise<MonitoredService[]>;
+    recordMetric(name: string, value: number, labels?: Map<string, string>): Promise<void>;
+    queryMetrics(query: string, timeRange?: TimeRange): Promise<any>;
+    getMetrics(serviceId?: string): Promise<ServiceMetrics>;
+    recordLog(level: LogLevel, message: string, metadata?: any): Promise<void>;
+    queryLogs(query: string, timeRange?: TimeRange): Promise<any>;
+    recordTrace(trace: any): Promise<void>;
+    queryTraces(query: string, timeRange?: TimeRange): Promise<any>;
+    createAlert(rule: AlertRule): Promise<void>;
+    updateAlert(alertId: string, rule: Partial<AlertRule>): Promise<void>;
+    deleteAlert(alertId: string): Promise<void>;
+    getAlert(alertId: string): Promise<AlertRule | undefined>;
+    listAlerts(): Promise<AlertRule[]>;
+    createIncident(incident: Incident): Promise<void>;
+    updateIncident(incidentId: string, incident: Partial<Incident>): Promise<void>;
+    getIncident(incidentId: string): Promise<Incident | undefined>;
+    listIncidents(status?: IncidentStatus): Promise<Incident[]>;
+    createSLO(slo: ServiceLevelObjective): Promise<void>;
+    updateSLO(sloId: string, slo: Partial<ServiceLevelObjective>): Promise<void>;
+    deleteSLO(sloId: string): Promise<void>;
+    getSLO(sloId: string): Promise<ServiceLevelObjective | undefined>;
+    listSLOs(): Promise<ServiceLevelObjective[]>;
+    createDashboard(dashboard: Dashboard): Promise<void>;
+    updateDashboard(dashboardId: string, dashboard: Partial<Dashboard>): Promise<void>;
+    deleteDashboard(dashboardId: string): Promise<void>;
+    getDashboard(dashboardId: string): Promise<Dashboard | undefined>;
+    listDashboards(): Promise<Dashboard[]>;
+    getSystemHealth(): Promise<SystemHealth>;
+    getSystemMetrics(): Promise<SystemMetrics>;
+    getSystemState(): Promise<ObservabilitySystemState>;
+    updateConfiguration(config: Partial<ObservabilityConfiguration>): Promise<void>;
+    getConfiguration(): Promise<ObservabilityConfiguration>;
+    shutdown(): Promise<void>;
+    private initializeComponent;
+    private initializeCollector;
+    private initializeProcessor;
+    private initializeExporter;
+    private initializeStorage;
+    private initializeAlertComponent;
+    private initializeGenericComponent;
+    private cleanupComponent;
+    private startComponentMonitoring;
+    private stopComponentMonitoring;
+    private initializeServiceMonitoring;
+    private startServiceHealthChecks;
+    private scheduleHealthCheck;
+    private setupServiceMetricsCollection;
+    private createServiceDashboard;
+    private stopServiceMonitoring;
+    private cleanupServiceResources;
+    private updateSystemMetrics;
+    private getAggregatedMetrics;
+    private triggerIncidentResponse;
+    private initializeSLOMonitoring;
+    private updateSLOMonitoring;
+    private stopSLOMonitoring;
+    private updateCollectionConfiguration;
+    private setupEventHandlers;
+    private startMonitoring;
+    private stopMonitoring;
+    private updateSystemHealth;
+    private updateSystemCapacity;
+    private registerCoreComponents;
+    private createDefaultDashboards;
+    private setupDefaultAlerts;
+}
+export { FLCMObservabilityManager };

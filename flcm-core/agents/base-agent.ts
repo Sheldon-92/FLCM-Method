@@ -7,6 +7,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import { EventEmitter } from 'events';
+import { 
+  EnhancedErrorHandler, 
+  getErrorHandler, 
+  ErrorCategory, 
+  ErrorSeverity,
+  EnhancedError
+} from '../shared/error-handler';
+import { 
+  PerformanceMonitor, 
+  getPerformanceMonitor, 
+  MetricType 
+} from '../shared/performance-monitor';
 
 /**
  * Agent configuration structure
@@ -118,11 +130,15 @@ export abstract class BaseAgent extends EventEmitter {
   protected state: AgentState;
   protected basePath: string;
   protected performanceTracker: Map<string, number>;
+  protected errorHandler: EnhancedErrorHandler;
+  protected performanceMonitor: PerformanceMonitor;
 
   constructor(configPath?: string) {
     super();
     this.basePath = path.join(process.cwd(), '.flcm-core');
     this.performanceTracker = new Map();
+    this.errorHandler = getErrorHandler();
+    this.performanceMonitor = getPerformanceMonitor();
     
     // Initialize state
     this.state = {
@@ -136,6 +152,9 @@ export abstract class BaseAgent extends EventEmitter {
     if (configPath) {
       this.loadConfiguration(configPath);
     }
+
+    // Setup error and performance monitoring
+    this.setupMonitoring();
   }
 
   /**
@@ -263,33 +282,64 @@ export abstract class BaseAgent extends EventEmitter {
       return postprocessed;
       
     } catch (error: any) {
-      // Handle execution error
-      const agentError = error instanceof AgentError 
-        ? error 
-        : new AgentError(
-            this.config.id,
-            'EXECUTION_ERROR',
-            error.message,
-            true
-          );
+      // Enhanced error handling with categorization
+      const errorCategory = this.categorizeError(error);
+      const errorSeverity = this.assessErrorSeverity(error);
       
-      // Update execution record with error
+      const enhancedError = this.errorHandler.handleError(
+        this.config.id,
+        error,
+        { 
+          executionId, 
+          input: typeof input === 'object' ? JSON.stringify(input) : String(input),
+          processingTime: Date.now() - startTime 
+        },
+        errorCategory,
+        errorSeverity,
+        executionId
+      );
+
+      // Record error metrics
+      this.performanceMonitor.recordErrorRate(
+        this.config.id,
+        1,
+        1,
+        { error: error.message, category: errorCategory }
+      );
+      
+      // Update execution record with enhanced error info
       const record = this.state.history.find(r => r.id === executionId);
       if (record) {
         record.status = 'failure';
-        record.error = agentError.message;
+        record.error = enhancedError.message;
         record.endTime = new Date();
       }
       
-      // Emit error event
+      // Emit enhanced error event
       this.emit('executionError', { 
         agentId: this.config.id, 
         executionId, 
-        error: agentError 
+        error: enhancedError 
       });
       
-      this.updateState('error', agentError);
-      throw agentError;
+      this.updateState('error', enhancedError);
+      
+      // Attempt recovery if appropriate
+      const recoveryResult = await this.attemptErrorRecovery(enhancedError, () => 
+        this.processInput(input, context)
+      );
+      
+      if (recoveryResult.success) {
+        this.updateState('ready');
+        return recoveryResult.result;
+      } else {
+        throw new AgentError(
+          this.config.id,
+          'EXECUTION_ERROR',
+          enhancedError.message,
+          enhancedError.recoveryStrategy !== 'manual_intervention'
+        );
+      }
       
     } finally {
       // Clear performance tracker for next execution
@@ -513,5 +563,178 @@ export abstract class BaseAgent extends EventEmitter {
 
   protected handleError(message: AgentMessage): void {
     // Override in concrete agents
+  }
+
+  /**
+   * Setup monitoring and error handling
+   */
+  protected setupMonitoring(): void {
+    // Setup performance monitoring alerts
+    this.performanceMonitor.onAlert((metric) => {
+      console.warn(`Performance alert for ${this.config.id}: ${metric.metricType} = ${metric.value}${metric.unit} (${metric.status})`);
+      this.emit('performanceAlert', {
+        agentId: this.config.id,
+        metric,
+        timestamp: new Date()
+      });
+    });
+
+    // Setup error handling alerts
+    this.errorHandler.onAlert((error) => {
+      console.error(`Error alert for ${this.config.id}: ${error.message} (${error.severity})`);
+      this.emit('errorAlert', {
+        agentId: this.config.id,
+        error,
+        timestamp: new Date()
+      });
+    });
+
+    // Start performance monitoring
+    this.performanceMonitor.startMonitoring(30000); // Every 30 seconds
+  }
+
+  /**
+   * Categorize error for enhanced handling
+   */
+  protected categorizeError(error: Error): ErrorCategory {
+    const message = error.message.toLowerCase();
+    
+    if (message.includes('network') || message.includes('request') || message.includes('timeout')) {
+      return ErrorCategory.NETWORK;
+    } else if (message.includes('validation') || message.includes('invalid')) {
+      return ErrorCategory.VALIDATION;
+    } else if (message.includes('memory') || message.includes('resource')) {
+      return ErrorCategory.RESOURCE;
+    } else if (message.includes('config') || message.includes('setting')) {
+      return ErrorCategory.CONFIGURATION;
+    } else if (message.includes('integration') || message.includes('api')) {
+      return ErrorCategory.INTEGRATION;
+    } else if (message.includes('input') || message.includes('parameter')) {
+      return ErrorCategory.USER_INPUT;
+    } else if (message.includes('process') || message.includes('execution')) {
+      return ErrorCategory.PROCESSING;
+    } else {
+      return ErrorCategory.SYSTEM;
+    }
+  }
+
+  /**
+   * Assess error severity
+   */
+  protected assessErrorSeverity(error: Error): ErrorSeverity {
+    const message = error.message.toLowerCase();
+    
+    if (message.includes('critical') || message.includes('fatal') || message.includes('crash')) {
+      return ErrorSeverity.CRITICAL;
+    } else if (message.includes('error') || message.includes('failed') || message.includes('exception')) {
+      return ErrorSeverity.HIGH;
+    } else if (message.includes('warn') || message.includes('deprecated')) {
+      return ErrorSeverity.MEDIUM;
+    } else {
+      return ErrorSeverity.LOW;
+    }
+  }
+
+  /**
+   * Attempt error recovery with enhanced error handling
+   */
+  protected async attemptErrorRecovery(
+    enhancedError: EnhancedError,
+    retryFunction: () => Promise<any>
+  ): Promise<{ success: boolean; result?: any; error?: Error }> {
+    try {
+      return await this.errorHandler.attemptRecovery(enhancedError, retryFunction);
+    } catch (recoveryError) {
+      console.error(`Recovery failed for agent ${this.config.id}:`, recoveryError.message);
+      return { success: false, error: recoveryError as Error };
+    }
+  }
+
+  /**
+   * Enhanced performance tracking with metrics recording
+   */
+  protected trackPerformance<T>(
+    operation: string,
+    fn: () => Promise<T>,
+    context: Record<string, any> = {}
+  ): Promise<T> {
+    const timer = this.performanceMonitor.startTiming(this.config.id, operation, context);
+    
+    return fn().finally(() => {
+      timer.stop(undefined, [operation]);
+    });
+  }
+
+  /**
+   * Get agent performance summary
+   */
+  public getPerformanceSummary() {
+    return this.performanceMonitor.getAgentSummary(this.config.id);
+  }
+
+  /**
+   * Get agent error statistics
+   */
+  public getErrorStatistics() {
+    return this.errorHandler.getErrorStatistics();
+  }
+
+  /**
+   * Generate comprehensive agent health report
+   */
+  public generateHealthReport() {
+    const performance = this.getPerformanceSummary();
+    const errors = this.getErrorStatistics();
+    
+    return {
+      agentId: this.config.id,
+      timestamp: new Date(),
+      status: this.state.status,
+      performance,
+      errors: {
+        totalErrors: errors.totalErrors,
+        criticalErrorsLast24h: errors.criticalErrorsLast24h,
+        recoverySuccessRate: errors.recoverySuccessRate,
+        averageResolutionTime: errors.averageResolutionTime
+      },
+      uptime: {
+        totalExecutions: this.state.executionCount,
+        lastActivity: this.state.lastExecution,
+        sessionStart: new Date() // Would track actual session start
+      },
+      recommendations: this.generateHealthRecommendations(performance, errors)
+    };
+  }
+
+  /**
+   * Generate health recommendations based on performance and error data
+   */
+  protected generateHealthRecommendations(
+    performance: any,
+    errors: any
+  ): string[] {
+    const recommendations: string[] = [];
+
+    if (performance && performance.healthScore < 70) {
+      recommendations.push('Agent health score is below 70%. Review performance metrics and optimize.');
+    }
+
+    if (errors.criticalErrorsLast24h > 5) {
+      recommendations.push('High number of critical errors detected. Investigate error patterns.');
+    }
+
+    if (performance && performance.trends.executionTime === 'degrading') {
+      recommendations.push('Execution time is trending worse. Consider performance optimization.');
+    }
+
+    if (errors.recoverySuccessRate < 0.8) {
+      recommendations.push('Error recovery success rate is low. Review error handling strategies.');
+    }
+
+    if (recommendations.length === 0) {
+      recommendations.push('Agent is operating within normal parameters.');
+    }
+
+    return recommendations;
   }
 }

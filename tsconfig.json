@@ -23,11 +23,11 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["flcm-core/*"]
+      "@/*": ["src/*"]
     }
   },
   "include": [
-    "flcm-core/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
