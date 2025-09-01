@@ -24,36 +24,36 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-        cache-dependency-path: '.flcm-core/package-lock.json'
+        cache-dependency-path: 'flcm-core/package-lock.json'
     
     - name: Install dependencies
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm ci
     
     - name: Run linting
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run lint
     
     - name: Run type checking
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run type-check
     
     - name: Run unit tests
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run test:unit
     
     - name: Run integration tests
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run test:integration
     
     - name: Generate test coverage
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run test:coverage
     
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
       with:
-        file: .flcm-core/coverage/lcov.info
+        file: flcm-core/coverage/lcov.info
         fail_ci_if_error: false
 
   build:
@@ -70,22 +70,22 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-        cache-dependency-path: '.flcm-core/package-lock.json'
+        cache-dependency-path: 'flcm-core/package-lock.json'
     
     - name: Install dependencies
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm ci
     
     - name: Build TypeScript
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run build
     
     - name: Generate API documentation
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run docs:api
     
     - name: Build documentation website
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run docs:build
     
     - name: Upload build artifacts
@@ -93,9 +93,9 @@ jobs:
       with:
         name: flcm-build-${{ github.sha }}
         path: |
-          .flcm-core/dist/
-          .flcm-core/docs/.vuepress/dist/
-          .flcm-core/docs/api/
+          flcm-core/dist/
+          flcm-core/docs/.vuepress/dist/
+          flcm-core/docs/api/
         retention-days: 30
 
   security:
@@ -108,7 +108,7 @@ jobs:
       uses: actions/checkout@v4
     
     - name: Run security audit
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm audit --audit-level=moderate
     
     - name: Run CodeQL Analysis
@@ -133,20 +133,20 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-        cache-dependency-path: '.flcm-core/package-lock.json'
+        cache-dependency-path: 'flcm-core/package-lock.json'
     
     - name: Install dependencies
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm ci
     
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
         name: flcm-build-${{ github.sha }}
-        path: .flcm-core/
+        path: flcm-core/
     
     - name: Run performance tests
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run test:performance
 
   deploy-docs:
@@ -164,20 +164,20 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-        cache-dependency-path: '.flcm-core/package-lock.json'
+        cache-dependency-path: 'flcm-core/package-lock.json'
     
     - name: Install dependencies
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm ci
     
     - name: Build documentation
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm run docs:generate
     
     - name: Deploy to Netlify
       uses: nwtgck/actions-netlify@v3.0
       with:
-        publish-dir: '.flcm-core/docs/.vuepress/dist'
+        publish-dir: 'flcm-core/docs/.vuepress/dist'
         production-branch: main
         github-token: ${{ secrets.GITHUB_TOKEN }}
         deploy-message: "Deploy from GitHub Actions"
@@ -200,17 +200,17 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-        cache-dependency-path: '.flcm-core/package-lock.json'
+        cache-dependency-path: 'flcm-core/package-lock.json'
     
     - name: Install dependencies
-      working-directory: .flcm-core
+      working-directory: flcm-core
       run: npm ci
     
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
         name: flcm-build-${{ github.sha }}
-        path: .flcm-core/
+        path: flcm-core/
     
     - name: Extract version from tag
       id: extract_version
@@ -219,7 +219,7 @@ jobs:
     - name: Create release package
       run: |
         mkdir -p release-package
-        cp -r .flcm-core/* release-package/
+        cp -r flcm-core/* release-package/
         cp install*.sh release-package/
         cp auto-install.sh release-package/
         cp clean-release.sh release-package/

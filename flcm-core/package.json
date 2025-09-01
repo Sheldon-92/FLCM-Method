@@ -22,7 +22,7 @@
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
     "quality:check": "npm run lint && npm run type-check && npm run format:check && npm run test:coverage:check",
-    "prepare": "husky install",
+    "prepare": "echo 'Skipping husky install in CI'",
     "precommit": "lint-staged",
     "docs:api": "typedoc --out docs/api --entryPoints agents/types.ts index.ts --theme default --readme README.md --includeVersion",
     "docs:build": "vuepress build docs",
