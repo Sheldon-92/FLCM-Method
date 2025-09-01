@@ -10,6 +10,23 @@ export interface BaseConfig {
   logLevel: 'error' | 'warn' | 'info' | 'debug';
 }
 
+// Creation modes
+export enum CreationMode {
+  DRAFT = 'draft',
+  POLISH = 'polish',
+  INTERACTIVE = 'interactive',
+  BATCH = 'batch'
+}
+
+// Platform types
+export enum Platform {
+  LINKEDIN = 'linkedin',
+  TWITTER = 'twitter',
+  XIAOHONGSHU = 'xiaohongshu',
+  ZHIHU = 'zhihu',
+  WECHAT = 'wechat'
+}
+
 // Agent-specific configuration
 export interface AgentConfig {
   id: string;
@@ -226,5 +243,7 @@ export type {
   CreatorConfig,
   PublisherConfig,
   FLCMConfig,
-  SystemConfig
+  SystemConfig,
+  CreationMode,
+  Platform
 };

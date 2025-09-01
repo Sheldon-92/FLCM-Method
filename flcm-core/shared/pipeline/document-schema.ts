@@ -39,6 +39,7 @@ export interface ContentDocument extends BaseDocument {
   type: 'content';
   title: string;
   content: string;
+  sections?: ContentSection[];
   source: DocumentSource;
   format: 'text' | 'markdown' | 'html' | 'json';
   wordCount: number;
@@ -60,6 +61,8 @@ export interface InsightsDocument extends BaseDocument {
   originalContent: string;
   analysis: AnalysisResult[];
   keyPoints: string[];
+  keyFindings: string[];
+  recommendations: string[];
   topics: string[];
   frameworks: FrameworkAnalysis[];
   summary: string;
@@ -325,6 +328,68 @@ export class DocumentValidator {
   }
 }
 
+// Source type enumeration
+export enum SourceType {
+  URL = 'url',
+  FILE = 'file',
+  TEXT = 'text',
+  API = 'api'
+}
+
+// Helper functions
+export function createInsightsDocument(
+  id: string,
+  originalContent: string,
+  analysis: AnalysisResult[]
+): InsightsDocument {
+  return {
+    id,
+    type: 'insights',
+    timestamp: new Date(),
+    version: '2.0.0',
+    originalContent,
+    analysis,
+    keyPoints: analysis.flatMap(a => a.findings),
+    keyFindings: analysis.flatMap(a => a.findings),
+    recommendations: analysis.flatMap(a => a.recommendations),
+    topics: [],
+    frameworks: [],
+    summary: '',
+    confidence: 0.8,
+    metadata: {
+      processed: true,
+      processingSteps: ['analysis']
+    }
+  };
+}
+
+// Dialogue session interface
+export interface DialogueSession {
+  id: string;
+  title: string;
+  userId?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  messages: DialogueMessage[];
+  status: 'active' | 'completed' | 'cancelled';
+}
+
+// Dialogue message interface
+export interface DialogueMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
+// Feedback interface
+export interface Feedback {
+  satisfied: boolean;
+  suggestions: string[];
+  rating?: number;
+  comments?: string;
+}
+
 // Export all types
 export type {
   BaseDocument,
@@ -337,5 +402,9 @@ export type {
   ScholarInput,
   CreatorInput,
   PublishOptions,
-  PublishResult
+  PublishResult,
+  DialogueSession,
+  DialogueMessage,
+  Feedback,
+  SourceType
 };

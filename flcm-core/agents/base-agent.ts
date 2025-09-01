@@ -322,7 +322,7 @@ export abstract class BaseAgent extends EventEmitter {
         error: enhancedError 
       });
       
-      this.updateState('error', enhancedError);
+      this.updateState('error', enhancedError.message || enhancedError.toString());
       
       // Attempt recovery if appropriate
       const recoveryResult = await this.attemptErrorRecovery(enhancedError, () => 
@@ -645,7 +645,8 @@ export abstract class BaseAgent extends EventEmitter {
     try {
       return await this.errorHandler.attemptRecovery(enhancedError, retryFunction);
     } catch (recoveryError) {
-      console.error(`Recovery failed for agent ${this.config.id}:`, recoveryError.message);
+      const errorMessage = (recoveryError as any)?.message || 'Unknown recovery error';
+      console.error(`Recovery failed for agent ${this.config.id}:`, errorMessage);
       return { success: false, error: recoveryError as Error };
     }
   }

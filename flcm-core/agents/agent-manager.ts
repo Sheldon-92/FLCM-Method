@@ -271,7 +271,7 @@ export class AgentManager extends EventEmitter {
     
     // Stop monitoring
     if (this.monitoringTimer) {
-      clearInterval(this.monitoringTimer);
+      clearInterval(this.monitoringTimer as NodeJS.Timeout);
     }
     
     // Cleanup all agents

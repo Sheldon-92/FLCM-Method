@@ -36,6 +36,7 @@ const v2_handler_1 = require("./v2/v2-handler");
 Object.defineProperty(exports, "V2Handler", { enumerable: true, get: function () { return v2_handler_1.V2Handler; } });
 const health_checker_1 = require("./shared/health/health-checker");
 Object.defineProperty(exports, "HealthChecker", { enumerable: true, get: function () { return health_checker_1.HealthChecker; } });
+const logger_1 = require("./shared/utils/logger");
 const express = __importStar(require("express"));
 // Initialize logger
 const logger = new logger_1.Logger('FLCM-Main');
