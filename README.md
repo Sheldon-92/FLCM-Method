@@ -2,262 +2,66 @@
 
 [![npm version](https://badge.fury.io/js/flcm.svg)](https://badge.fury.io/js/flcm)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js CI](https://github.com/Sheldon-92/FLCM-Method/workflows/CI/badge.svg)](https://github.com/Sheldon-92/FLCM-Method/actions)
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/Sheldon-92/FLCM-Method/releases)
 
-> 🎉 **FLCM 2.0 Released!** Complete enterprise-grade rewrite with 72,873 lines of TypeScript, AI/ML capabilities, and production-ready infrastructure.
+> 企业级 AI 驱动的学习内容管理平台，提供智能化内容创建和知识管理解决方案。
 
-## ✨ What's New in FLCM 2.0?
+## ✨ 核心特性
 
-FLCM has evolved from a content creation tool to a **comprehensive AI-powered learning platform** with enterprise capabilities:
+- 🤖 **AI 驱动**: ML 驱动的自适应学习路径和个性化推荐
+- 🕸️ **知识图谱**: 自动构建和可视化知识关联网络
+- 📚 **15+ 学习框架**: 包括 SWOT-USED、SCAMPER、苏格拉底提问等
+- 🌍 **多平台支持**: LinkedIn、Twitter/X、微信、小红书
+- 🚀 **企业级架构**: 微服务、API 网关、完整的可观测性
+- 🔄 **向后兼容**: 完全兼容 FLCM 1.0
 
-### 🚀 Version 2.0 Highlights
-- **72,873 lines** of production TypeScript code
-- **139 files** with complete microservices architecture
-- **15+ learning frameworks** (up from 5 in v1.0)
-- **Knowledge Graph System** with advanced analytics
-- **AI/ML Pipeline** with recommendation engine
-- **Enterprise Observability** with Grafana dashboards
-- **Multi-cloud Deployment** (AWS, GCP, Azure)
-- **Full Backward Compatibility** with v1.0
+## 🎯 快速开始
 
-### 🎯 Key Capabilities
-- **Intelligent Learning Engine**: ML-powered adaptive learning paths
-- **Content Management System**: Event-driven document pipeline
-- **API Gateway**: Enterprise-grade with load balancing
-- **Testing Framework**: Jest, Playwright, Cypress support
-- **UI Management**: React, Vue, Angular, Svelte support
-- **Production Ready**: Docker, Kubernetes, CI/CD pipeline
-
-## 🎬 Quick Demo
-
-```bash
-# One-line installation
-curl -fsSL https://raw.githubusercontent.com/Sheldon-92/FLCM-Method/main/install.sh | bash
-
-# Create your first content
-flcm quick "AI trends in 2024"
-
-# ✨ Get optimized content for all platforms in ~25 minutes
-```
-
-## 🏗️ How It Works
-
-```mermaid
-graph LR
-    A[Your Topic] --> B[🔍 Collector Agent]
-    B --> C[📚 Scholar Agent]
-    C --> D[✍️ Creator Agent]
-    D --> E[📱 Adapter Agent]
-    E --> F[📊 Multi-Platform Content]
-```
-
-### The 4-Agent Pipeline
-
-1. **🔍 Collector Agent** - Gathers and scores relevant information using RICE framework
-2. **📚 Scholar Agent** - Builds deep understanding with 5-level progressive learning
-3. **✍️ Creator Agent** - Creates engaging content while preserving your voice DNA
-4. **📱 Adapter Agent** - Optimizes for each platform's specific requirements
-
-## 📦 Installation
-
-### Option 1: One-Line Install (Recommended)
+### 一键安装
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Sheldon-92/FLCM-Method/main/install.sh | bash
 ```
 
-### Option 2: Manual Install
+### 基本使用
 ```bash
-git clone https://github.com/Sheldon-92/FLCM-Method.git
-cd flcm
-npm install
-npm run build
-npm link  # For global CLI access
+# 创建内容
+flcm create "你的主题"
+
+# 快速模式（20-30分钟）
+flcm quick "AI trends 2024"
+
+# 查看帮助
+flcm help
 ```
 
-### Option 3: NPX (No Installation)
-```bash
-npx flcm@latest create
-```
+## 📚 文档
 
-## 🎯 Usage
+- [安装指南](./docs/installation.md)
+- [用户指南](./docs/user-guide/)
+- [API 文档](./docs/api/)
+- [更新日志](./CHANGELOG.md)
 
-### Interactive Mode (Recommended for beginners)
-```bash
-flcm create
-```
+## 🛠️ 技术规格
 
-### Quick Mode (20-30 minutes)
-```bash
-flcm quick "Your amazing topic here"
-flcm quick "AI in healthcare" --platforms linkedin twitter
-```
+- **代码规模**: 72,873 行 TypeScript
+- **架构**: 微服务 + 事件驱动
+- **框架支持**: React、Vue、Angular、Svelte
+- **部署**: Docker、Kubernetes、多云支持
 
-### Standard Mode (45-60 minutes)
-```bash
-flcm standard "Deep dive topic" --platforms all --voice professional
-```
+## 🤝 贡献
 
-### Check Progress & History
-```bash
-flcm status          # Current workflow status
-flcm history         # View creation history
-flcm export <id>     # Export content as markdown/text
-```
+欢迎贡献！请查看 [贡献指南](./CONTRIBUTING.md)。
 
-## 📊 Example Output
-
-After running FLCM, you'll get optimized content for each platform:
-
-```
-✨ Content Generation Complete!
-
-📱 LinkedIn
-Title: AI Trends That Will Transform Healthcare in 2024
-Length: 1,847 characters | Fit Score: 94% | Est. Reach: 2,500-5,000
-
-📱 Twitter/X
-Title: 🧵 Thread: AI Healthcare Revolution (1/8)
-Length: 276 characters | Fit Score: 91% | Est. Reach: 800-2,000
-
-📱 WeChat
-Title: 2024年AI医疗革命：五大趋势深度解析
-Length: 1,923 characters | Fit Score: 89% | Est. Reach: 1,200-3,000
-
-💾 Results saved with ID: 1703123456789
-   Use 'flcm export 1703123456789' to export content
-```
-
-## ⚙️ Configuration
-
-```bash
-# View current config
-flcm config --list
-
-# Set defaults
-flcm config --set defaultMode=quick
-flcm config --set defaultPlatforms=linkedin,twitter
-
-# Environment variables (optional)
-cp .env.example .env
-# Edit .env with your preferences
-```
-
-## 🔧 API Usage
-
-Start the API server:
-```bash
-npm run start:api  # Starts on port 3000
-```
-
-Create content via API:
-```bash
-curl -X POST http://localhost:3000/api/workflows/start \
-  -H "Content-Type: application/json" \
-  -d '{
-    "topic": "AI in Healthcare",
-    "mode": "quick",
-    "platforms": ["linkedin", "twitter"]
-  }'
-```
-
-## 📈 Platform Support
-
-| Platform | Max Length | Hashtags | Special Features |
-|----------|------------|----------|------------------|
-| LinkedIn | 3,000 chars | 5 | Professional tone, industry insights |
-| Twitter/X | 280/thread | 2 | Thread structure, viral hooks |
-| WeChat | 2,000 chars | 0 | Article format, cultural adaptation |
-| Xiaohongshu | 1,000 chars | 10 | Lifestyle focus, emoji-rich |
-
-## 🚀 Advanced Features
-
-### Voice DNA Analysis
-FLCM analyzes your writing samples to preserve your unique voice:
-```bash
-# Train on your existing content
-flcm voice train --samples "path/to/your/articles/"
-```
-
-### Batch Processing
-```bash
-# Process multiple topics
-flcm batch topics.txt --mode quick
-```
-
-### Custom Templates
-```bash
-# Use custom content templates
-flcm create --template "path/to/template.md"
-```
-
-## 📚 Documentation
-
-- **[Quick Reference](./QUICK-REFERENCE.md)** - Essential commands and tips
-- **[Deployment Guide](./DEPLOYMENT-GUIDE.md)** - Production deployment
-- **[Complete Documentation](./docs/FLCM-Complete-Documentation.md)** - Full system docs
-- **[API Reference](http://localhost:3000/api/docs)** - API documentation
-
-## 🐛 Troubleshooting
-
-**Port already in use:**
-```bash
-lsof -i :3000
-kill -9 <PID>
-```
-
-**Permission errors:**
-```bash
-chmod +x scripts/*.sh
-```
-
-**Build errors:**
-```bash
-rm -rf node_modules dist
-npm install
-npm run build
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
-
-```bash
-# Development setup
-git clone https://github.com/Sheldon-92/FLCM-Method.git
-cd flcm
-npm install
-npm run dev  # Start in development mode
-```
-
-## 📄 License
+## 📄 许可证
 
 MIT © [Friction Lab](https://github.com/friction-lab)
 
-## 🙏 Acknowledgments
+## 🆘 支持
 
-Built with ❤️ using:
-- TypeScript for type safety
-- Node.js for runtime
-- Express.js for API
-- Commander.js for CLI
-- And many other amazing open-source projects
+- [提交问题](https://github.com/Sheldon-92/FLCM-Method/issues)
+- [讨论社区](https://discord.gg/flcm)
+- [邮件支持](mailto:support@flcm.io)
 
 ---
 
-**⭐ Star this repo if FLCM helped you create amazing content!**
-
-**📧 Questions?** Create an [issue](https://github.com/Sheldon-92/FLCM-Method/issues) or join our [community](https://discord.gg/flcm).
-
----
-
-```
-███████╗██╗      ██████╗███╗   ███╗
-██╔════╝██║     ██╔════╝████╗ ████║
-█████╗  ██║     ██║     ██╔████╔██║
-██╔══╝  ██║     ██║     ██║╚██╔╝██║
-██║     ███████╗╚██████╗██║ ╚═╝ ██║
-╚═╝     ╚══════╝ ╚═════╝╚═╝     ╚═╝
-
-Transform ideas into multi-platform content in minutes, not hours.
-```
+**FLCM 2.0** - 智能化学习内容管理的未来
