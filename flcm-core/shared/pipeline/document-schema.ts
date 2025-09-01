@@ -393,21 +393,26 @@ export interface Feedback {
   comments?: string;
 }
 
-// Export all types
+// Export all types (remove duplicate exports)
 export type {
-  BaseDocument,
-  DocumentMetadata,
-  ContentDocument,
-  InsightsDocument,
-  DraftDocument,
-  PublishedContent,
-  ProcessingContext,
-  ScholarInput,
-  CreatorInput,
-  PublishOptions,
-  PublishResult,
-  DialogueSession,
-  DialogueMessage,
-  Feedback,
-  SourceType
+  AnalysisResult,
+  FrameworkAnalysis,
+  VoiceProfile,
+  WritingStyle,
+  ContentStructure,
+  ContentSection,
+  Platform,
+  VisualRecommendation,
+  ContentMetrics,
+  ProcessingState,
+  PipelineStage,
+  ProcessingOptions,
+  ProcessingMetrics,
+  ContentRequirements,
+  DocumentValidationResult,
+  DocumentTransformer,
+  QualityMetrics
 };
+
+// Note: SourceType is exported as both enum and in the type export above
+// All interfaces are already exported via their declarations

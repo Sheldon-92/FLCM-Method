@@ -731,7 +731,8 @@ export class PerformanceMonitor extends EventEmitter {
         })).slice(-this.maxMetricsInMemory);
       }
     } catch (error) {
-      console.warn('Failed to load existing performance metrics:', error.message);
+      const errorMessage = (error as any)?.message || 'Unknown error loading metrics';
+      console.warn('Failed to load existing performance metrics:', errorMessage);
     }
   }
 
@@ -739,7 +740,8 @@ export class PerformanceMonitor extends EventEmitter {
     try {
       fs.writeFileSync(this.metricsFilePath, JSON.stringify(this.metrics, null, 2));
     } catch (error) {
-      console.warn('Failed to save performance metrics:', error.message);
+      const errorMessage = (error as any)?.message || 'Unknown error saving metrics';
+      console.warn('Failed to save performance metrics:', errorMessage);
     }
   }
 }

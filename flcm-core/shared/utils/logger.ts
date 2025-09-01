@@ -51,11 +51,7 @@ const loggerCache = new Map<string, winston.Logger>();
 /**
  * Create or get a logger instance
  */
-export function createLogger(name: string, config?: Partial<LoggerConfig>): Logger {
-  if (loggerCache.has(name)) {
-    return loggerCache.get(name) as Logger;
-  }
-
+function createNewLogger(name: string, config?: Partial<LoggerConfig>): Logger {
   const finalConfig = { ...DEFAULT_CONFIG, ...config };
   
   // Ensure log directory exists
@@ -86,7 +82,7 @@ export function createLogger(name: string, config?: Partial<LoggerConfig>): Logg
       new winston.transports.File({
         filename: path.join(finalConfig.logDir, `${name}.log`),
         maxFiles: finalConfig.maxFiles,
-        maxsize: finalConfig.maxSize,
+        maxsize: Number(finalConfig.maxSize),
         format: winston.format.combine(
           winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
           winston.format.errors({ stack: true }),
@@ -119,8 +115,17 @@ export function createLogger(name: string, config?: Partial<LoggerConfig>): Logg
     }
   };
 
-  loggerCache.set(name, winstonLogger);
+  loggerCache.set(name, logger);
   return logger;
+}
+
+export function createLogger(name: string, config?: Partial<LoggerConfig>): Logger {
+  if (loggerCache.has(name)) {
+    const cachedLogger = loggerCache.get(name);
+    return cachedLogger || createNewLogger(name, config);
+  }
+  
+  return createNewLogger(name, config);
 }
 
 /**

@@ -3,7 +3,11 @@
   "version": "2.0.0",
   "description": "FLCM 2.0 - AI-Powered Learning Companion",
   "main": "dist/index.js",
+  "bin": {
+    "flcm": "./cli.js"
+  },
   "scripts": {
+    "start": "node cli.js",
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
     "test": "jest",
