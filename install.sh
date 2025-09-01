@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # FLCM (Friction Lab Content Maker) - One-Click Installation Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/flcm/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/Sheldon-92/FLCM-Method/main/install.sh | bash
 
 set -e
 
@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-FLCM_VERSION="1.0.0"
+FLCM_VERSION="2.0.0"
 INSTALL_DIR="${HOME}/.flcm"
 REPO_URL="https://github.com/Sheldon-92/FLCM-Method.git"
 
@@ -71,6 +71,15 @@ check_requirements() {
 }
 
 prompt_install_location() {
+    # Check if we're in a piped environment (non-interactive)
+    if [ ! -t 0 ]; then
+        echo -e "${BLUE}📁 Non-interactive mode detected. Using default installation path.${NC}"
+        echo -e "${GREEN}Installing to: ${HOME}/.flcm${NC}"
+        INSTALL_DIR="${HOME}/.flcm"
+        echo ""
+        return
+    fi
+    
     echo -e "${BLUE}📁 Where would you like to install FLCM?${NC}"
     echo -e "${YELLOW}Suggested paths:${NC}"
     echo "  1. ${HOME}/.flcm (default - recommended)"
