@@ -1,0 +1,12 @@
+{
+  "id": "flcm-framework",
+  "name": "FLCM Framework Integration",
+  "version": "2.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Deep integration between FLCM Framework and Obsidian for enhanced knowledge creation and management.",
+  "author": "FLCM Team",
+  "authorUrl": "https://github.com/flcm-framework",
+  "fundingUrl": "https://github.com/sponsors/flcm-framework",
+  "isDesktopOnly": false,
+  "main": "main.js"
+}

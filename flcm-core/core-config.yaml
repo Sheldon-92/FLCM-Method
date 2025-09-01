@@ -98,3 +98,56 @@ debug:
   enabled: true
   verbose: false
   log_level: "info" # debug | info | warning | error
+
+# FLCM 2.0 Version Routing Configuration
+flcm:
+  defaultVersion: "1.0"  # Default to stable version
+  userOverrides:
+    enabled: true
+    configPath: ".flcm/user-config.yaml"
+  featureFlags:
+    v2_mentor: false
+    v2_creator: false
+    v2_publisher: false
+    v2_obsidian: false
+    v2_beta_users: false
+    v2_internal_testing: false
+
+# Version-specific configurations
+versions:
+  "1.0":
+    agents:
+      - collector
+      - scholar
+      - creator
+      - adapter
+    pipeline:
+      maxDepth: 5
+      timeout: 20000
+  "2.0":
+    layers:
+      - mentor
+      - creator
+      - publisher
+    frameworks:
+      enabled: true
+      preload: false
+    obsidian:
+      enabled: false
+      syncInterval: 5000
+
+# Health check configuration
+health:
+  enabled: true
+  interval: 60000  # 1 minute
+  endpoints:
+    v1: "/health/v1"
+    v2: "/health/v2"
+    combined: "/health"
+
+# Migration settings
+migration:
+  enabled: true
+  batchSize: 100
+  validateData: true
+  backupBeforeMigration: true
