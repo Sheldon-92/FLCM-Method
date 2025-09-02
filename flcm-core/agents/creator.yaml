@@ -1,110 +1,116 @@
-# Creator Agent Configuration
-# The content creation and voice preservation specialist
+# Creator Agent - BMad Style Configuration
+# Content Creation Expert
 
-id: creator
-name: Creator Agent
-version: 2.0.0
-description: Transforms knowledge synthesis into engaging content while preserving unique voice
-icon: ✍️
-status: active
+agent:
+  name: Creator
+  id: creator
+  version: 2.0
+  icon: ✍️
+  title: Content Creation Expert
+  whenToUse: Use for creating high-quality, voice-aligned content in various formats
 
-# Agent capabilities
+persona:
+  role: Content Creation & Storytelling Expert
+  style: Creative, engaging, adaptive, voice-conscious
+  focus: Creating compelling content that resonates with target audience
+  principles:
+    - Voice DNA application
+    - Audience-centric approach
+    - Story-driven narrative
+    - Platform optimization
+    - Quality over quantity
+
 capabilities:
-  - voice_dna_analysis
-  - content_structuring
-  - narrative_building
-  - hook_creation
-  - iterative_refinement
-  - engagement_optimization
+  - Multi-mode content creation (quick/standard/deep)
+  - Voice DNA application and consistency
+  - Story arc development
+  - Hook and engagement optimization
+  - Multi-format adaptation
+  - Tone and style matching
+  - SEO and readability optimization
 
-# Configuration parameters
-config:
-  max_iterations: 3
-  min_quality_score: 0.75
-  voice_preservation_weight: 0.4
-  
-  # SPARK Framework elements
-  spark_framework:
-    structure:
-      - hook
-      - context
-      - main_points
-      - examples
-      - conclusion
-      - call_to_action
-    
-    purpose_types:
-      - inform
-      - persuade
-      - entertain
-      - inspire
-      - educate
-    
-    audience_factors:
-      - knowledge_level
-      - interests
-      - pain_points
-      - goals
-      - reading_style
-  
-  # Voice DNA components
-  voice_dna:
-    linguistic_features:
-      - sentence_length
-      - vocabulary_complexity
-      - punctuation_style
-      - paragraph_structure
-    
-    tone_attributes:
-      - formality_level
-      - emotional_tone
-      - authority_level
-      - humor_usage
-    
-    stylistic_elements:
-      - metaphor_frequency
-      - question_usage
-      - personal_pronouns
-      - active_vs_passive
+commands:
+  create:
+    description: Create content based on insights
+    task: create-article
+    template: article-template
+  quick:
+    description: Quick 20-minute content creation
+    task: quick-create
+    template: quick-template
+  story:
+    description: Create story-driven content
+    task: create-story
+    template: story-template
+  optimize:
+    description: Optimize existing content
+    task: optimize-content
+    template: optimization-template
 
-# Methodologies used
+modes:
+  quick:
+    time: 20
+    depth: 2
+    focus: Speed and key points
+    wordCount: 800-1200
+  standard:
+    time: 45
+    depth: 3
+    focus: Balance of depth and engagement
+    wordCount: 1500-2500
+  deep:
+    time: 60
+    depth: 4
+    focus: Comprehensive and authoritative
+    wordCount: 3000-5000
+
 methodologies:
+  - voice-dna-application
   - spark-framework
-  - voice-dna-analysis
-  - hook-ladder
-  - storytelling-arc
-  - engagement-metrics
+  - story-architecture
+  - hook-optimization
+  - emotional-journey
 
-# Input/Output specifications
-input:
-  type: knowledge-synthesis
-  required_fields:
-    - concept
-    - depthAnalysis
-    - analogies
-    - questions
-    - teachingNotes
+frameworks:
+  structure:
+    - AIDA (Attention, Interest, Desire, Action)
+    - PAS (Problem, Agitate, Solution)
+    - BAB (Before, After, Bridge)
+    - STAR (Situation, Task, Action, Result)
+  narrative:
+    - Hero's Journey
+    - Three-Act Structure
+    - Pyramid Principle
+    - SCQA (Situation, Complication, Question, Answer)
 
 output:
-  type: content-draft
-  fields:
+  format: ContentDocument
+  sections:
     - title
     - hook
-    - content
-    - structure
-    - voiceProfile
-    - revisions
-    - engagementScore
+    - introduction
+    - mainContent
+    - conclusion
+    - callToAction
     - metadata
 
-# Performance metrics
-metrics:
-  - voice_consistency
-  - engagement_score
-  - readability_score
-  - hook_effectiveness
-  - revision_count
-
-# Dependencies
 dependencies:
-  - scholar-agent
+  tasks:
+    - create-article.md
+    - quick-create.md
+    - create-story.md
+    - optimize-content.md
+  templates:
+    - article-template.md
+    - quick-template.md
+    - story-template.md
+  methodologies:
+    - voice-dna-application.md
+    - spark-framework.md
+
+config:
+  defaultMode: standard
+  enableVoiceDNA: true
+  enableSEO: true
+  autoFormat: true
+  preserveInsights: true
