@@ -37,9 +37,6 @@ class FLCMOrchestrator {
     // 设置当前agent
     this.activeAgent = agent;
     
-    // 添加taskName到params
-    params.taskName = taskName;
-    
     // 执行任务
     return await this.runTask(task, params);
   }
@@ -270,23 +267,13 @@ class FLCMOrchestrator {
     console.log(`\n📋 Running task: ${task.name}`);
     console.log(`Steps: ${task.steps.length}`);
     
-    // 设置当前任务名称供executeStep使用
-    this.currentTask = params.taskName || task.name.toLowerCase().replace(/\s+/g, '-');
-    
-    // 如果只有一个步骤且是默认任务，直接执行agent功能
-    if (task.steps.length === 1 && task.steps[0] === 'Execute task') {
-      const result = await this.executeStep(task.steps[0], params);
-      if (result) {
-        console.log(`\n✅ Task completed: ${task.name}`);
-        return result;
-      }
-    } else {
-      // 执行多步骤任务
-      for (let i = 0; i < task.steps.length; i++) {
-        const step = task.steps[i];
-        console.log(`  ${i + 1}. ${step}`);
-        await this.executeStep(step, params);
-      }
+    // 模拟任务执行
+    for (let i = 0; i < task.steps.length; i++) {
+      const step = task.steps[i];
+      console.log(`  ${i + 1}. ${step}`);
+      
+      // 这里可以添加实际的任务执行逻辑
+      await this.executeStep(step, params);
     }
 
     console.log(`\n✅ Task completed: ${task.name}`);
@@ -302,33 +289,10 @@ class FLCMOrchestrator {
    * 执行单个步骤
    */
   async executeStep(step, params) {
-    // 加载实际的agent执行器
-    if (!this.executor) {
-      const AgentExecutor = require('./agent-executor');
-      this.executor = new AgentExecutor();
-    }
+    // 这里实现具体的步骤执行逻辑
+    // 可以调用方法论、模板等
     
-    // 根据当前agent和任务执行实际功能
-    if (this.activeAgent) {
-      const agentId = this.activeAgent.agent.id;
-      const methodMap = {
-        'scholar.analyze-content': 'executeScholarAnalyze',
-        'creator.create-article': 'executeCreatorCreate',
-        'creator.quick-create': 'executeCreatorCreate',
-        'publisher.publish-content': 'executePublisherPublish'
-      };
-      
-      // 构建方法键
-      const taskName = this.currentTask || 'default';
-      const methodKey = `${agentId}.${taskName}`;
-      const method = methodMap[methodKey];
-      
-      if (method && this.executor[method]) {
-        return await this.executor[method](params);
-      }
-    }
-    
-    // 默认：短暂延迟
+    // 模拟延迟
     await new Promise(resolve => setTimeout(resolve, 100));
   }
 

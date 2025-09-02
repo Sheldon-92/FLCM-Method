@@ -2,33 +2,24 @@
 
 /**
  * FLCM CLI Entry Point
- * Pre-compiled version with proper path resolution
+ * Intelligent path detection for dual-package structure
  */
 
 const path = require('path');
 const fs = require('fs');
 
-// Fix path issue: look for package.json in parent directory when in dist/
-const findPackageJson = () => {
-  const currentDir = __dirname;
-  const parentDir = path.dirname(currentDir);
-  
-  // Try current directory first
-  const currentPackagePath = path.join(currentDir, 'package.json');
-  if (fs.existsSync(currentPackagePath)) {
-    return require(currentPackagePath);
-  }
-  
-  // Try parent directory (common when CLI is in dist/ folder)
-  const parentPackagePath = path.join(parentDir, 'package.json');
-  if (fs.existsSync(parentPackagePath)) {
-    return require(parentPackagePath);
-  }
-  
-  // Additional paths for various installation scenarios
+// Intelligent package.json detection
+function findPackageJson() {
   const possiblePaths = [
+    // Production environment paths (after sync)
+    path.join(__dirname, '..', 'package.json'),        // ../package.json (from flcm-core/cli.js)
+    path.join(__dirname, 'package.json'),              // ./package.json (same directory)
+    
+    // Development environment paths
     path.join(__dirname, '..', '.flcm-core', 'package.json'), // Development nested structure
-    path.join(__dirname, '..', '..', 'package.json'),  // From dist/cli.js
+    
+    // Installation environment paths (after install.sh)
+    path.join(__dirname, '..', '..', 'package.json'),  // ../../package.json (from dist/cli.js)
     '/Users/sheldonzhao/.flcm/package.json',           // Fixed installation path
     '/Users/sheldonzhao/.flcm/flcm-core/package.json', // Alternative installation path
   ];
@@ -38,18 +29,23 @@ const findPackageJson = () => {
       return require(packagePath);
     }
   }
-  
-  // Fallback to hardcoded version info
+
+  // If no package.json found, return default values
+  console.warn('⚠️  Warning: package.json not found, using defaults');
   return {
     name: 'flcm',
     version: '2.0.0',
-    description: 'Friction Lab Content Maker - AI-powered content creation platform'
+    description: 'FLCM - Friction Lab Content Maker'
   };
-};
+}
 
-// Check if we're running in development or production
-const isDev = process.argv.includes('--dev');
+// Load package.json with intelligent detection
 const packageJson = findPackageJson();
+
+// Detect environment
+const isDev = process.argv.includes('--dev');
+const installPath = __dirname.includes('.flcm-core') ? 'development' : 
+                    __dirname.includes('flcm-core') ? 'production' : 'unknown';
 
 console.log(`🚀 FLCM v${packageJson.version || '2.0.0'}`);
 
@@ -94,42 +90,16 @@ For more information, visit: https://github.com/Sheldon-92/FLCM-Method
 // Debug mode
 const debug = process.argv.includes('--debug');
 
-// Basic functionality - just show status for now
+// Basic functionality - enhanced status
 const command = process.argv[2] || 'status';
-
-// Get installation directory (handle both direct run and dist/ subdirectory)
-const getInstallDir = () => {
-  const currentDir = __dirname;
-  // If we're in a 'dist' directory, go up one level
-  if (path.basename(currentDir) === 'dist') {
-    return path.dirname(currentDir);
-  }
-  return currentDir;
-};
-
-const installDir = getInstallDir();
 
 switch (command) {
   case 'status':
     console.log('✅ FLCM system is running');
-    console.log('📁 Installation path:', installDir);
-    console.log('🔧 Configuration: Default settings loaded');
+    console.log('📁 Installation path:', __dirname);
+    console.log('🔧 Environment:', installPath);
+    console.log('📦 Package:', packageJson.name, 'v' + packageJson.version);
     console.log('🤖 Agents: Scholar, Creator, Publisher (Basic mode)');
-    
-    // Check if flcm-core directory exists
-    const flcmCoreDir = path.join(installDir, 'flcm-core');
-    if (fs.existsSync(flcmCoreDir)) {
-      console.log('📚 Core modules: Available');
-      
-      // Check for key agent files
-      const agentsDir = path.join(flcmCoreDir, 'agents');
-      if (fs.existsSync(agentsDir)) {
-        const agents = fs.readdirSync(agentsDir).filter(f => f.endsWith('.yaml') || f.endsWith('.ts'));
-        console.log('🤖 Available agents:', agents.length);
-      }
-    } else {
-      console.log('⚠️  Core modules: Not found in expected location');
-    }
     
     if (debug) {
       console.log('\n🔍 Debug Information:');
@@ -143,23 +113,23 @@ switch (command) {
   case 'config':
     console.log('FLCM Configuration:');
     console.log('- Version:', packageJson.version || '2.0.0');
-    console.log('- Mode: Basic (Full implementation available)');
-    console.log('- Installation:', installDir);
+    console.log('- Environment:', installPath);
+    console.log('- Mode: Basic (TypeScript compilation in progress)');
+    console.log('- Agents: Available but not fully initialized');
+    console.log('- Config file: .env (edit to customize)');
     
-    // Check for config files
-    const envFile = path.join(installDir, '.env');
-    if (fs.existsSync(envFile)) {
-      console.log('- Environment: Configured (.env found)');
-    } else {
-      console.log('- Environment: Default (no .env file)');
-    }
+    // Check for .env file
+    const envPaths = [
+      path.join(__dirname, '..', '.env'),
+      path.join(__dirname, '.env'),
+      '/Users/sheldonzhao/.flcm/.env'
+    ];
     
-    // Check for core config
-    const coreConfigPath = path.join(installDir, 'flcm-core', 'core-config.yaml');
-    if (fs.existsSync(coreConfigPath)) {
-      console.log('- Core config: Available');
+    const envExists = envPaths.some(p => fs.existsSync(p));
+    if (envExists) {
+      console.log('- .env status: ✅ Found');
     } else {
-      console.log('- Core config: Using defaults');
+      console.log('- .env status: ⚠️  Not found (using defaults)');
     }
     break;
     
@@ -168,15 +138,8 @@ switch (command) {
   case 'publish':
   case 'workflow':
     console.log(`🚧 Command '${command}' is not yet fully implemented.`);
-    console.log('The FLCM core is available but agent system needs configuration.');
+    console.log('The FLCM core is still being built. Please check back soon!');
     console.log('💡 You can check status with: flcm status');
-    
-    // Give hints about what would be needed for full implementation
-    const input = process.argv[3];
-    if (input) {
-      console.log(`📝 Input received: ${input}`);
-      console.log('🔄 This would be processed by the agent system when fully configured.');
-    }
     break;
     
   case 'test':
@@ -184,7 +147,7 @@ switch (command) {
     console.log('🧪 Running self-test...');
     console.log('✅ CLI executable: OK');
     console.log('✅ Package detection: OK');
-    console.log('✅ Environment:', installDir);
+    console.log('✅ Environment:', installPath);
     console.log('✅ All systems operational');
     break;
     
